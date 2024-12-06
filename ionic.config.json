@@ -1,0 +1,7 @@
+{
+  "name": "Food-Delivery-App",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
