@@ -8,25 +8,41 @@
 
 <ion-content>
 
-  <ion-button [routerLink]="['/', 'tabs', 'sub-page', 1]" expand="block">
-    <ion-icon name="add"></ion-icon>
-    Redirect to Sub Page via RouterLink
-  </ion-button>
+  <div class="ion-margin">
 
-  <ion-button (click)="navigate()" expand="block">
-    <ion-icon name="add"></ion-icon>
-    Redirect to Sub Page via Click
-  </ion-button>
+    <div class="ion-text-center ion-margin-top ion-padding-top">
+      <ion-label>Sub page routing/navigation</ion-label>
+    </div>
+    
+    <ion-button [routerLink]="['/', 'tabs', 'sub-page', 1]" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Sub Page via RouterLink
+    </ion-button>
+  
+    <ion-button (click)="navigate()" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Sub Page via Click (navigate)
+    </ion-button>
 
-  <ion-button [routerLink]="['/', 'tabs', 'tab1', 'home']" expand="block">
-    <ion-icon name="add"></ion-icon>
-    Redirect to Home Page via RouterLink
-  </ion-button>
+    <ion-button (click)="navigateByUrl()" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Sub Page via Click (navigateByUrl)
+    </ion-button>
 
-  <ion-button (click)="sendNavigationExtras()" expand="block">
-    <ion-icon name="add"></ion-icon>
-    Redirect to Home Page via Click & send NavigationExtras
-  </ion-button>
+    <div class="ion-text-center ion-margin-top ion-padding-top">
+      <ion-label>Home page routing/navigation</ion-label>
+    </div>
+  
+    <ion-button [routerLink]="['/', 'tabs', 'tab1', 'home']" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Home Page via RouterLink
+    </ion-button>
+  
+    <ion-button (click)="sendNavigationExtras()" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Home Page via Click & send NavigationExtras
+    </ion-button>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  </div>
+
 </ion-content>

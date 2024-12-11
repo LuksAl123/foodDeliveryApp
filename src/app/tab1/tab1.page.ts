@@ -8,21 +8,28 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class Tab1Page {
 
+  id = 1;
+
   private router = inject(Router);
 
   constructor() {}
 
   navigate() {
-    this.router.navigate(['/', 'tabs', 'sub-page', 1]);
+    this.router.navigate(['/', 'tabs', 'sub-page', this.id]);
+  }
+
+  navigateByUrl(){
+    this.router.navigateByUrl('/tabs/sub-page/' + this.id, { replaceUrl: true });
   }
 
   sendNavigationExtras(){
-    const data = { id: 1, name: 'Coding puma', };
+    const data = { id: 1, name: 'Coding puma' };
     const navData: NavigationExtras = {
       queryParams: {
-        data: JSON.stringify(data), 
+        routeData: JSON.stringify(data),
       }
     };
+    console.log(navData);
     this.router.navigate(['/', 'tabs', 'tab1', 'home'], navData);
   }
 }
