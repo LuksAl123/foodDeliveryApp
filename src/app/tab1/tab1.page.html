@@ -8,6 +8,8 @@
 
 <ion-content>
 
+  <app-explore-container name="Tab 1 page"></app-explore-container>
+
   <div class="ion-margin">
 
     <div class="ion-text-center ion-margin-top ion-padding-top">
@@ -27,6 +29,11 @@
     <ion-button (click)="navigateByUrl()" expand="block">
       <ion-icon name="add"></ion-icon>
       Redirect to Sub Page via Click (navigateByUrl)
+    </ion-button>
+
+    <ion-button (click)="navCtrl.navigateForward('/tabs/sub-page/' + id)" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Sub Page via navCtrl.navigateForward()
     </ion-button>
 
     <div class="ion-text-center ion-margin-top ion-padding-top">

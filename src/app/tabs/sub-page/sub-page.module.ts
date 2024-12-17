@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { SubPagePageRoutingModule } from './sub-page-routing.module';
 
 import { SubPagePage } from './sub-page.page';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SubPagePageRoutingModule
+    SubPagePageRoutingModule,
+    ComponentsModule
   ],
   declarations: [SubPagePage]
 })

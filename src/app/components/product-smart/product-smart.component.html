@@ -1,0 +1,32 @@
+<ion-list *ngIf="!isHome">
+  <ion-list *ngIf="items.length > 0">
+    <ion-list class="ion-margin">
+  
+      <ion-list-header>
+        Products list
+      </ion-list-header>
+  
+      <ion-item *ngFor="let item of items; let i = index" lines="full">
+        <!-- <ion-label>
+          {{ item?.name }}
+          <p>ID #{{ item?.id }}</p>
+        </ion-label>
+        <ion-text slot="end">{{ item?.price }}</ion-text> -->
+        <app-product-dumb [item_data]="item"></app-product-dumb>
+      </ion-item>
+  
+    </ion-list>    
+  </ion-list>
+</ion-list> 
+
+<ion-list *ngIf="isHome">
+  <ion-item *ngFor="let item of items; let i = index" lines="full">
+    <!-- <ion-label>
+      {{ item?.name }}
+      <p>ID #{{ item?.id }}</p>
+    </ion-label>
+    <ion-text slot="end">{{ item?.price }}</ion-text> -->
+    <app-product-dumb [item_data]="item"></app-product-dumb>
+  </ion-item>
+
+</ion-list>

@@ -1,5 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { ApiService } from 'src/app/services/api/api.service';
+// import { ApiService } from 'src/app/services/api/api.service';
 
 @Component({
   selector: 'app-sub-page',
@@ -8,7 +11,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SubPagePage implements OnInit {
 
+  items: any[] = [];
   private route = inject(ActivatedRoute);
+  public navCtrl = inject(NavController);
+  private apiService = inject(ApiService);
 
   constructor() { }
 
@@ -16,7 +22,16 @@ export class SubPagePage implements OnInit {
     console.log('ngoninit subpage');
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
-    const data = this.route.snapshot.queryParams;
-    console.log(data);
+
+    this.items = this.apiService.getItems();
   }
+
+  synchronous() {
+    
+  }
+
+  // goBack(){
+  //   this.navCtrl.back();
+  //   this.navCtrl.navigateRoot('/tabs');
+  // }
 }
