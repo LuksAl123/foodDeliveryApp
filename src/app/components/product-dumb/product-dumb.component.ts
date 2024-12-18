@@ -9,9 +9,11 @@ export class ProductDumbComponent implements OnInit {
 
   @Input() item_data: any;
   
-  constructor() { }
+  constructor() { 
+    console.log('constructor product dumb: ', this.item_data);
+   }
 
   ngOnInit() {
-    console.log(this.item_data);
+    console.log('ngoninit product dumb: ', this.item_data);
   } 
 }

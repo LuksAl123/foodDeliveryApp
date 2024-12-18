@@ -14,10 +14,15 @@
         <ion-text slot="end">{{ item?.price }}</ion-text> -->
         <app-product-dumb [item_data]="item"></app-product-dumb>
       </ion-item>
-  
-    </ion-list>    
+      <ion-item lines="none">
+        <ion-label>
+          Total 
+        </ion-label>
+        <ion-text>{{ total }}</ion-text>
+      </ion-item>
+    </ion-list>
   </ion-list>
-</ion-list> 
+</ion-list>
 
 <ion-list *ngIf="isHome">
   <ion-item *ngFor="let item of items; let i = index" lines="full">
