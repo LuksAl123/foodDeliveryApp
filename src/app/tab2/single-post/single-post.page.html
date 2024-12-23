@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Post # {{id}} </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-item lines="none" class="post"> 
+      <ion-label>
+        {{ post?.title }}
+      <p> {{ post?.body }} </p>
+      </ion-label>
+    </ion-item>
+</ion-content>

@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { Product } from 'src/app/interfaces/product.interface';
 import { ApiService } from 'src/app/services/api/api.service';
 
 @Component({
@@ -6,10 +7,10 @@ import { ApiService } from 'src/app/services/api/api.service';
   templateUrl: './product-smart.component.html',
   styleUrls: ['./product-smart.component.scss'],
 })
-export class ProductSmartComponent  implements OnInit {
+export class ProductSmartComponent implements OnInit {
 
   @Input() isHome: boolean = true;
-  items: any[] = [];
+  items: Product[] = [];
   total = 0;
   private apiService = inject(ApiService);
 
@@ -27,8 +28,9 @@ export class ProductSmartComponent  implements OnInit {
     console.log('ngoninit items: ', this.items);
     if(!this.isHome) this.getTotal1();
 
+    // spread operators
     const item = { id: 1, name: 'Coding Technyks' };
-    const item1 = { ...item, name: 'Nikhil', desig: 'instructor', ...this.items[0] };
+    const item1 = { ...item, ...{name: 'Nikhil'}, desig: 'instructor', ...this.items[1] as any };
     console.log(item1);
 
     const array1 = [1, 2, 3, 4];

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Product } from 'src/app/interfaces/product.interface';
 
 @Component({
   selector: 'app-product-dumb',
@@ -7,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ProductDumbComponent implements OnInit {
 
-  @Input() item_data: any;
+  @Input() item_data!: Product;
   
   constructor() { 
     console.log('constructor product dumb: ', this.item_data);

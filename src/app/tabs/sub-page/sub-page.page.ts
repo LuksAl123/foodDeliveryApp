@@ -27,10 +27,27 @@ export class SubPagePage implements OnInit {
     console.log(id);
 
     // this.items = this.apiService.getItems();
+    this.synchronous();
+    this.asynchronous();
   }
 
   synchronous() {
     console.log('Start');
+    for (let i = 0; i < 10; i++) {
+      // Simulate a long-running task
+      console.log(i);
+    }
+    console.log('End');
+  }
+
+  async asynchronous() {
+    console.log('Start');
+
+    setTimeout(() => {
+      console.log('Timeout');
+    }, 1000);
+
+    console.log('End');
   }
 
   // goBack(){
