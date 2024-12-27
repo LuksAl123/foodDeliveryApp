@@ -25,6 +25,7 @@
     async fetchPostById(){
         try {
           this.post = await lastValueFrom(this.http.get<any>(`https://jsonplaceholder.typicode.com/posts/${this.id}`));
+          console.log('post: ', this.post);
         } catch(e) {
           console.log(e);
         }

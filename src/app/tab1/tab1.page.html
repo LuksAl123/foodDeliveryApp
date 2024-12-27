@@ -1,55 +1,75 @@
 <ion-header>
+  <!-- <ion-toolbar color="gold" mode="md"> -->
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <ion-title> Tab 1 </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
   <app-explore-container name="Tab 1 page"></app-explore-container>
 
-  <div class="ion-margin">
+  <ion-item lines="none">
+    <ion-toggle
+      [(ngModel)]="paletteToggle"
+      (ionChange)="toggleChange($event)"
+      justify="space-between"
+      >Dark Mode</ion-toggle
+    >
+  </ion-item>
 
+  <div class="ion-margin">
     <div class="ion-text-center ion-margin-top ion-padding-top">
       <ion-label>Sub page routing/navigation</ion-label>
     </div>
-    
-    <ion-button [routerLink]="['/', 'tabs', 'sub-page', 1]" expand="block">
+
+    <ion-button
+      [routerLink]="['/', 'tabs', 'sub-page', 1]"
+      expand="block"
+      class="subpage"
+    >
       <ion-icon name="add"></ion-icon>
-      Redirect to Sub Page via RouterLink
+      Redirect to Sub page via Routerlink
     </ion-button>
-  
+
     <ion-button (click)="navigate()" expand="block">
       <ion-icon name="add"></ion-icon>
-      Redirect to Sub Page via Click (navigate)
+      Redirect to Sub page via Click (navigate)
     </ion-button>
 
     <ion-button (click)="navigateByUrl()" expand="block">
       <ion-icon name="add"></ion-icon>
-      Redirect to Sub Page via Click (navigateByUrl)
+      Redirect to Sub page via Click (navigateByUrl)
     </ion-button>
 
-    <ion-button (click)="navCtrl.navigateForward('/tabs/sub-page/' + id)" expand="block">
+    <ion-button
+      (click)="navCtrl.navigateForward('/tabs/sub-page/' + id)"
+      expand="block"
+    >
       <ion-icon name="add"></ion-icon>
-      Redirect to Sub Page via navCtrl.navigateForward()
+      Redirect to Sub page via navCtrl.navigateForward()
     </ion-button>
 
     <div class="ion-text-center ion-margin-top ion-padding-top">
       <ion-label>Home page routing/navigation</ion-label>
     </div>
-  
+
     <ion-button [routerLink]="['/', 'tabs', 'tab1', 'home']" expand="block">
       <ion-icon name="add"></ion-icon>
-      Redirect to Home Page via RouterLink
-    </ion-button>
-  
-    <ion-button (click)="sendNavigationExtras()" expand="block">
-      <ion-icon name="add"></ion-icon>
-      Redirect to Home Page via Click & send NavigationExtras
+      Redirect to Home page via Routerlink
     </ion-button>
 
+    <ion-button (click)="sendNavigationExtras()" expand="block">
+      <ion-icon name="add"></ion-icon>
+      Redirect to Home page via Click & send NavigationExtras
+    </ion-button>
   </div>
+
+  <ion-row>
+    <ion-col size="6">
+      <ion-card color="primary" routerLink="/tabs/tab1/network">
+        <ion-card-header class="ion-text-center">Network</ion-card-header>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 
 </ion-content>

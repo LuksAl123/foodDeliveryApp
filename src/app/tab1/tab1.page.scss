@@ -1,0 +1,27 @@
+// .ios {
+//   --ion-color-primary: #d41d5d;
+// }
+
+// .md {
+//   --ion-color-primary: #d41db8;
+// }
+
+// .ios {
+  // .subpage {
+  //   --background: var(--ion-color-secondary);
+  // }
+// }
+ion-button {
+    --background: var(--ion-color-secondary);
+  }
+  
+  ion-toolbar {
+    --min-height: 2.5rem;
+    // ion-title {
+    //   --color: var(--ion-color-primary);
+    // }
+  }
+  
+  // ion-label {
+  //   --color: #222;
+  // }

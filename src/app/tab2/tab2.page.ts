@@ -42,8 +42,9 @@ export class Tab2Page implements OnInit, OnDestroy {
     // });
     try {
       this.posts = await lastValueFrom(this.http.get<any>('https://jsonplaceholder.typicode.com/posts'));
+      console.log('posts: ', this.posts);
     } catch(e) {
-      console.log(e);
+      console.error('error log: ', e);
     }
   }
 
