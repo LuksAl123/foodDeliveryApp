@@ -1,75 +1,194 @@
-<ion-header>
-  <!-- <ion-toolbar color="gold" mode="md"> -->
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title> Tab 1 </ion-title>
+    <ion-title>
+      Native Plugins
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <app-explore-container name="Tab 1 page"></app-explore-container>
 
-  <ion-item lines="none">
-    <ion-toggle
-      [(ngModel)]="paletteToggle"
-      (ionChange)="toggleChange($event)"
-      justify="space-between"
-      >Dark Mode</ion-toggle
-    >
-  </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <!--  sizeLg="4" sizeMd="3" pull="2" pullLg="1" -->
+        <!--  offset="3" offsetSm="2" -->
+        <ion-card color="primary" routerLink="/home/network">
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Network & Toast</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="6" sizeLg="4">
+        <ion-card color="primary" (click)="share()">
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Social Sharing</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="6" sizeLg="4">
+        <ion-card color="primary" routerLink="/home/camera">
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Access Camera</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="6" sizeLg="4">
+        <ion-card color="primary" routerLink="/home/contacts">
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Contacts & Call</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+  
+      <ion-col size="6" sizeLg="4">
+        <ion-card color="primary" routerLink="/home/local-notification">
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Local Notifications & sounds</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <div class="ion-margin">
-    <div class="ion-text-center ion-margin-top ion-padding-top">
-      <ion-label>Sub page routing/navigation</ion-label>
-    </div>
 
-    <ion-button
-      [routerLink]="['/', 'tabs', 'sub-page', 1]"
-      expand="block"
-      class="subpage"
-    >
-      <ion-icon name="add"></ion-icon>
-      Redirect to Sub page via Routerlink
-    </ion-button>
 
-    <ion-button (click)="navigate()" expand="block">
-      <ion-icon name="add"></ion-icon>
-      Redirect to Sub page via Click (navigate)
-    </ion-button>
 
-    <ion-button (click)="navigateByUrl()" expand="block">
-      <ion-icon name="add"></ion-icon>
-      Redirect to Sub page via Click (navigateByUrl)
-    </ion-button>
 
-    <ion-button
-      (click)="navCtrl.navigateForward('/tabs/sub-page/' + id)"
-      expand="block"
-    >
-      <ion-icon name="add"></ion-icon>
-      Redirect to Sub page via navCtrl.navigateForward()
-    </ion-button>
 
-    <div class="ion-text-center ion-margin-top ion-padding-top">
-      <ion-label>Home page routing/navigation</ion-label>
-    </div>
+  <ion-list>
+    <ion-item button (click)="itemCheck()">
+      <ion-avatar slot="start">
+        <img src="assets/icon/favicon.png">
+      </ion-avatar>
+      <ion-label>
+        Avatar Start, Button Item
+      </ion-label>
+    </ion-item>
+    
+    <ion-item href="#">
+      <ion-label>
+        Thumbnail End, Anchor Item
+      </ion-label>
+      <ion-thumbnail slot="end">
+        <img src="assets/icon/favicon.png">
+      </ion-thumbnail>
+    </ion-item>
+    
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>H2 Title Text</h2>
+        <p>Button on right</p>
+      </ion-label>
+      <ion-button fill="outline" slot="end">View</ion-button>
+    </ion-item>
+    
+    <ion-item button (click)="itemCheck()">
+      <ion-thumbnail slot="start">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==">
+      </ion-thumbnail>
+      <ion-label>
+        <h3>H3 Title Text</h3>
+        <p>Icon on right</p>
+      </ion-label>
+      <ion-icon name="close-circle" slot="end"></ion-icon>
+    </ion-item>
 
-    <ion-button [routerLink]="['/', 'tabs', 'tab1', 'home']" expand="block">
-      <ion-icon name="add"></ion-icon>
-      Redirect to Home page via Routerlink
-    </ion-button>
+    <ion-item-sliding>
+      <ion-item-options side="start">
+        <ion-item-option (click)="itemCheck()">Favorite</ion-item-option>
+        <ion-item-option color="danger" (click)="itemCheck()">Share</ion-item-option>
+      </ion-item-options>
+  
+      <ion-item>
+        <ion-label>Item Options</ion-label>
+      </ion-item>
+  
+      <ion-item-options side="end">
+        <ion-item-option (click)="itemCheck()">
+          <ion-icon slot="top" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>Unread</ion-item-option>
+        <ion-item-option>
+          <ion-icon slot="icon-only" name="heart"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  
 
-    <ion-button (click)="sendNavigationExtras()" expand="block">
-      <ion-icon name="add"></ion-icon>
-      Redirect to Home page via Click & send NavigationExtras
-    </ion-button>
-  </div>
+  <!-- <ion-list>
+    <ion-list-header>
+      <ion-label>List of Data using ion-list</ion-label>
+    </ion-list-header>
+    <ion-item detail="true" (click)="itemCheck()" color="secondary">
+      <ion-label>Pokémon Yellow</ion-label>
+      <ion-note slot="end">End</ion-note>
+      <ion-icon name="person" slot="start"></ion-icon>
+    </ion-item>
+    <ion-item detail="true" (click)="itemCheck()" color="secondary">
+      <ion-label>
+        <h2>Mega Man X</h2>
+        <p class="ion-text-wrap ion-text-center ion-text-justify">
+          <ion-text color="danger">Multiline text that should wrap when it is too long
+            to fit on one line in the item.</ion-text>
+        </p>
+      </ion-label>
+        <ion-button slot="end">
+          End
+        </ion-button>
+    </ion-item>
+    <ion-item lines="none" detail="true" (click)="itemCheck()" color="secondary">
+      <ion-label>The Legend of Zelda</ion-label>
+    </ion-item>
+    <ion-item detail="true" (click)="itemCheck()" color="secondary">
+      <ion-label>Pac-Man</ion-label>
+    </ion-item>
+    <ion-item detail="true" (click)="itemCheck()" color="secondary">
+      <ion-label>Super Mario World</ion-label>
+    </ion-item>
 
-  <ion-row>
-    <ion-col size="6">
-      <ion-card color="primary" routerLink="/tabs/tab1/network">
-        <ion-card-header class="ion-text-center">Network</ion-card-header>
-      </ion-card>
-    </ion-col>
-  </ion-row>
+    <ion-item detail="true" (click)="itemCheck()" color="secondary">
+      <ion-label>Enter data</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+  </ion-list> -->
 
+  <!-- <ion-grid>
+    <ion-label>List of Items using ion-grid</ion-label> 
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Pokémon Yellow</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Pokémon Yellow1</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Pokémon Yellow2</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Pokémon Yellow3</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid> -->
+  
 </ion-content>

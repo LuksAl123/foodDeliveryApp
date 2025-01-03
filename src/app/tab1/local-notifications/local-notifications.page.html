@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Network</ion-title>
+    <ion-title>Local Notifications</ion-title>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
     </ion-buttons>
@@ -9,7 +9,6 @@
 
 <ion-content>
 
-  <!-- {{ status.connected ? 'Device Online' : 'Device Offline' }} -->
-  {{ status }}
+  <ion-button (click)="schedule()" expand="block" class="ion-margin">Schedule Notification</ion-button>
 
 </ion-content>

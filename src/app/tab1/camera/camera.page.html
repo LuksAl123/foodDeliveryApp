@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Network</ion-title>
+    <ion-title>Camera</ion-title>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
     </ion-buttons>
@@ -9,7 +9,7 @@
 
 <ion-content>
 
-  <!-- {{ status.connected ? 'Device Online' : 'Device Offline' }} -->
-  {{ status }}
+  <ion-button expand="block" (click)="getPhoto()">Get Photo</ion-button>
+  <img *ngIf="selectImage" [src]="selectImage" />
 
 </ion-content>

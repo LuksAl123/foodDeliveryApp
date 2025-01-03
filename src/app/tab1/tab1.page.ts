@@ -1,6 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-tab1',
@@ -74,6 +75,19 @@ export class Tab1Page implements OnInit, OnDestroy {
       }
     };
     this.router.navigate(['/', 'tabs', 'tab1', 'home'], navData);
+  }
+
+  async share() {
+    await Share.share({
+      title: 'See cool stuff',
+      text: 'Really awesome thing you need to see right meow',
+      url: 'http://ionicframework.com/',
+      dialogTitle: 'Share with buddies',
+    });
+  }
+
+  itemCheck(){
+    console.log('item visible');
   }
 
   ionViewWillLeave() {

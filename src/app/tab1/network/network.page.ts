@@ -1,6 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { PluginListenerHandle } from '@capacitor/core';
 import { ConnectionStatus, Network } from '@capacitor/network';
+import { Toast } from '@capacitor/toast';
 
 @Component({
   selector: 'app-network',
@@ -28,8 +29,11 @@ export class NetworkPage implements OnInit, OnDestroy {
     console.log('Network status:', this.status);
   }
 
-  changeStatus(status: ConnectionStatus) {
-    this.status = status.connected ? 'Online' : 'Offline'; 
+  async changeStatus(status: ConnectionStatus) {
+    this.status = status.connected ? 'Online' : 'Offline';
+    await Toast.show({
+      text: this.status,
+    });
   }
 
   ngOnDestroy(): void {
