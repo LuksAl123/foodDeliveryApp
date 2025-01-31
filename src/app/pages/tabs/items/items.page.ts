@@ -5,17 +5,21 @@ import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { take } from 'rxjs/operators';
+import { Restaurant } from 'src/app/models/restaurant.model';
+import { Category } from 'src/app/models/category.model';
+import { Item } from 'src/app/models/item.model';
 
 @Component({
   selector: 'app-items',
   templateUrl: './items.page.html',
   styleUrls: ['./items.page.scss'],
 })
+
 export class ItemsPage implements OnInit, OnDestroy {
 
   id: any;
-  data: any = {};
-  items: any[] = [];
+  data = {} as Restaurant;
+  items: Item[] = [];
   veg: boolean = false;
   isLoading: boolean;
   cartData: any = {};
@@ -24,9 +28,9 @@ export class ItemsPage implements OnInit, OnDestroy {
     icon: 'fast-food-outline',
     title: 'No Menu Available'
   };
-  // restaurants: any[] = [];  
-  categories: any[] = [];
-  allItems: any[] = [];
+  // restaurants: any[] = [];
+  categories: Category[] = [];
+  allItems: Item[] = [];
   cartSub: Subscription;
   // routeSub: Subscription;
 
@@ -75,11 +79,10 @@ export class ItemsPage implements OnInit, OnDestroy {
           if(this.veg == true) this.items = this.allItems.filter(x => x.veg === true);
           else this.items = [...this.allItems];
         }
-      } 
+      }
       // else {
       //   this.storedData = {};
       //   this.cartData = {};
-
       // }
     });    
     this.getItems();
@@ -88,17 +91,21 @@ export class ItemsPage implements OnInit, OnDestroy {
   async getItems() {
     try {      
       this.isLoading = true;
-      this.data = {};
+      this.data = {} as Restaurant;
       this.cartData = {};
       this.storedData = {};
-      setTimeout(async() => {      
+      setTimeout(async() => {
         // this.categories = this.api.categories;
         this.allItems = this.api.allItems;
         let data: any = this.api.restaurants1.filter(x => x.uid === this.id);
         this.data = data[0];
         this.categories = this.api.categories.filter(x => x.uid === this.id);
         this.allItems = this.api.allItems.filter(x => x.uid === this.id);
+        this.allItems.forEach((element, index) => {
+          this.allItems[index].quantity = 0;
+        });
         this.items = [...this.allItems];
+        console.log('items: ', this.items);
         console.log('restaurant: ', this.data);
         await this.cartService.getCartData();
         this.isLoading = false;
@@ -134,7 +141,7 @@ export class ItemsPage implements OnInit, OnDestroy {
 
   quantityMinus(item) {
     const index = this.allItems.findIndex(x => x.id === item.id);
-    this.cartService.quantityMinus(index);
+    this.cartService.quantityMinus(index, this.allItems);
   }
 
   saveToCart() {

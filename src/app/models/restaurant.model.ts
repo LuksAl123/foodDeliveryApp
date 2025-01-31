@@ -1,5 +1,5 @@
 export class Restaurant {
-    
+
     constructor(
         public uid: string,
         public cover: string,

@@ -97,6 +97,4 @@ export class GlobalService {
       default: return 'location-outline';
     }
   }
-
-  
 }

@@ -49,12 +49,25 @@ export class AddressService {
   }
 
   updateAddress(id, param) {
-    const currentAddreses = this._addresses.value;
-    const index = this.addresses.findIndex(x => x.id == address.id);
+    param.id = id;
+    let currentAddresses = this._addresses.value;
+    const index = currentAddresses.findIndex(x => x.id == id);
+    currentAddresses[index] = new Address(
+      id,
+      param.user_id,
+      param.title,
+      param.address,
+      param.landmark,
+      param.house,
+      param.lat,
+      param.lng
+    );
+    this._addresses.next(currentAddresses);
   }
 
   deleteAddress(param) {
-    param.delete = true;
-    this._addresses.next(param);
+    let currentAddresses = this._addresses.value;
+    currentAddresses = currentAddresses.filter(x => x.id != param.id);
+    this._addresses.next(currentAddresses);
   }
 }
