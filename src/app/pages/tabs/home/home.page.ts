@@ -15,6 +15,7 @@ import { LocationService } from 'src/app/services/location/location.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
+
 export class HomePage implements OnInit, OnDestroy {
 
   banners: any[] = [];
