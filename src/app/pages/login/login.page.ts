@@ -57,8 +57,11 @@ export class LoginPage implements OnInit {
       form.reset();
     })
     .catch(e => {
-      console.log(e);
+      console.log('e: ', e);
       this.isLogin = false;
+      let msg: string = 'Could not sign you in, please try again.';
+      if (e.code === 'auth/invalid-credential') msg = 'Invalid email or password.';
+      this.global.showAlert(msg);
     });
   }
 

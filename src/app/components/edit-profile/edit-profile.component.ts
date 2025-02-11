@@ -8,6 +8,7 @@ import { ProfileService } from 'src/app/services/profile/profile.service';
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss'],
 })
+
 export class EditProfileComponent implements OnInit {
 
   @Input() profile;
@@ -41,5 +42,4 @@ export class EditProfileComponent implements OnInit {
       this.global.errorToast();
     }
   }
-
 }

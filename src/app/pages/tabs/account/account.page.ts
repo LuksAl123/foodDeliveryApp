@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
 import { Order } from 'src/app/models/order.model';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { OrderService } from 'src/app/services/order/order.service';
@@ -12,6 +14,7 @@ import { ProfileService } from 'src/app/services/profile/profile.service';
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
+
 export class AccountPage implements OnInit, OnDestroy {
 
   profile: any = {};
@@ -21,10 +24,12 @@ export class AccountPage implements OnInit, OnDestroy {
   profileSub: Subscription;
 
   constructor(
+    private navCtrl: NavController,
     private orderService: OrderService,
     private cartService: CartService,
     private global: GlobalService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private authService: AuthService
     ) { }
 
   ngOnInit() {
@@ -54,7 +59,18 @@ export class AccountPage implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  logout() {}
+  logout() {
+    this.global.showLoader();
+    this.authService.logout().then(() => {
+      this.navCtrl.navigateRoot('/login');
+      this.global.hideLoader();
+    })
+    .catch(e => {
+      console.log(e);
+      this.global.hideLoader();
+      this.global.errorToast('Logout Failed! Check your internet connection.');
+    });
+  }
 
   async reorder(order: Order) {
     console.log(order);
