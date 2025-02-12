@@ -80,6 +80,22 @@ export class AuthService {
     } catch(e) {
       console.log(e);
       throw(e);
-    } 
+    }
+  }
+
+  checkAuth() {
+    return new Promise((resolve, reject) => {
+      this.fireAuth.onAuthStateChanged(user => {
+        console.log('auth user: ', user);
+        if(user) {
+          this.setUserData(user.uid);
+          resolve(user.uid);
+        } else {
+          this.logout();
+          reject(false);
+        }
+      });
+    });
   }
 }
+

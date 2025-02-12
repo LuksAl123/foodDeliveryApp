@@ -22,26 +22,31 @@ export class ProfileService {
   ) { }
 
   async getProfile() {
-    const uid = await this.authService.getId();
-    // let profile: any = await (await this.apiService.collection('users').doc(uid).get().toPromise()).data();
-    let documentSnapshot = await this.apiService.collection('users').doc(uid).get().toPromise();
-    let profile: any = documentSnapshot.data();
-
-    console.log('Document Snapshot:', documentSnapshot);
-    if (!profile) {
-      console.error('Profile not found for UID:', uid);
-      return;
+    try {
+      const uid = await this.authService.getId();
+      let profile: any = await (await (this.apiService.collection('users').doc(uid).get().toPromise())).data();
+      // let documentSnapshot = await this.apiService.collection('users').doc(uid).get().toPromise();
+      // let profile: any = documentSnapshot.data();
+  
+      // console.log('Document Snapshot:', documentSnapshot);
+      // if (!profile) {
+      //   console.error('Profile not found for UID:', uid);
+      //   return;
+      // }
+      console.log('profile: ', profile);
+      const data = new User(
+        profile.email,
+        profile.phone,
+        profile.name,
+        uid,
+        profile.role,
+        profile.status
+      );
+      this._profile.next(data);
+      return data;
+    } catch(e) {
+      throw(e);
     }
-    console.log('profile: ', profile);
-    const data = new User(
-      profile.email,
-      profile.phone,
-      profile.name,
-      uid,
-      profile.role,
-      profile.status
-    );
-    this._profile.next(data);
   }
 
   async updateProfile(profile, param) {
