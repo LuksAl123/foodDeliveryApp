@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { User } from 'src/app/models/user.model';
+import { ApiService } from '../api/api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
   constructor(
     private storage: StorageService,
     private fireAuth: AngularFireAuth,
-    private adb: AngularFirestore
+    private apiService: ApiService
   ) { }
 
   async login(email: string, password: string): Promise<any> {
@@ -36,19 +37,19 @@ export class AuthService {
   }
 
   async register(formValue) {
-    // return await this.storage.setStorage('uid','ASDASDASDOIJQOIEJ');
     try {
       const registeredUser = await this.fireAuth.createUserWithEmailAndPassword(formValue.email, formValue.password);
       console.log('register user: ', registeredUser);
-      const data = {
-        uid: registeredUser.user.uid,
-        email: formValue.email,
-        phone: formValue.phone,
-        name: formValue.name,
-        type: 'user',
-        status: 'active'
-      };
-      await this.adb.collection('users').doc(registeredUser.user.uid).set(data);
+      const data = new User(
+        formValue.email,
+        formValue.phone,
+        formValue.name,
+        registeredUser.user.uid,
+        'user',
+        'active'
+      );
+      // const data = userInstance.toPlainObject();
+      await this.apiService.collection('users').doc(registeredUser.user.uid).set(Object.assign({}, data));
       await this.setUserData(registeredUser.user.uid);
     } catch(e) {
       throw(e);
@@ -56,7 +57,11 @@ export class AuthService {
   }
 
   async resetPassword(email: string) {
-    return await email;
+    try {
+      await this.fireAuth.sendPasswordResetEmail(email);
+    } catch(e) {
+      throw(e);
+    }
   }
 
   async logout() {
@@ -66,5 +71,15 @@ export class AuthService {
     } catch(e) {
       throw(e);
     }
+  }
+
+  async updateEmail(oldEmail, newEmail, password) {
+    try {
+      const result = await this.fireAuth.signInWithEmailAndPassword(oldEmail, password);
+      await result.user.updateEmail(newEmail);
+    } catch(e) {
+      console.log(e);
+      throw(e);
+    } 
   }
 }

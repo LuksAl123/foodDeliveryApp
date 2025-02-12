@@ -48,15 +48,9 @@ export class AccountPage implements OnInit, OnDestroy {
 
   async getData() {
     this.isLoading = true;
-    setTimeout(async() => {
-      this.profile = {      
-        name: 'Nikhil Agarwal',
-        phone: '9109109100',
-        email: 'technyks@gmail.com'  
-      };
-      await this.orderService.getOrders();
-      this.isLoading = false;      
-    }, 3000);
+    await this.profileService.getProfile();
+    await this.orderService.getOrders();
+    this.isLoading = false;
   }
 
   logout() {

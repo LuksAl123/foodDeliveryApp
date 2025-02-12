@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Address } from 'src/app/models/address.model';
 import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
@@ -8,9 +9,18 @@ import { Restaurant } from 'src/app/models/restaurant.model';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiService {
 
-  banners = [  
+  constructor(
+    private adb: AngularFirestore
+  ) { }
+
+  collection(path) {
+    return this.adb.collection(path);
+  }
+
+  banners = [
     {banner: 'assets/imgs/1.jpg'},
     {banner: 'assets/imgs/2.jpg'},
     {banner: 'assets/imgs/3.jpg'}  
@@ -308,6 +318,4 @@ export class ApiService {
     },
   ];
   
-
-  constructor() { }
 }
