@@ -16,9 +16,8 @@ export class SignupPage implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    private router: Router, 
-    private global: GlobalService
-  ) { }
+    private router: Router,
+    private global: GlobalService) { }
 
   ngOnInit() {
     this.isLoggedIn();
