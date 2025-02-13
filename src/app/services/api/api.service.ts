@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { switchMap } from 'rxjs';
 import { Address } from 'src/app/models/address.model';
 import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
@@ -12,6 +13,12 @@ import { Restaurant } from 'src/app/models/restaurant.model';
 
 export class ApiService {
 
+  banners = [
+    {banner: 'assets/imgs/1.jpg'},
+    {banner: 'assets/imgs/2.jpg'},
+    {banner: 'assets/imgs/3.jpg'}  
+  ];
+
   constructor(
     private adb: AngularFirestore
   ) { }
@@ -20,12 +27,41 @@ export class ApiService {
     return this.adb.collection(path);
   }
 
-  banners = [
-    {banner: 'assets/imgs/1.jpg'},
-    {banner: 'assets/imgs/2.jpg'},
-    {banner: 'assets/imgs/3.jpg'}  
-  ];
-  
+  randomString() {
+    const id = Math.floor(100000000 + Math.random() * 900000000);
+    return id.toString();
+  }
+
+  async addBanner(data) {
+    try {
+      const id = this.randomString();
+      data.id = id;
+      await this.collection('banners').doc(id).set(data);
+    } catch(e) {
+      console.log(e);
+      throw(e);
+    } 
+  }
+
+  async getBanners() {
+    try {
+      const banners = await this.collection('banners').get().pipe(
+        switchMap(async(data: any) => {
+          let bannerData = await data.docs.map(element => {
+            const item = element.data();
+            return item;
+          });
+          console.log(bannerData);
+          return bannerData;
+        })
+      ).toPromise();
+      console.log(banners);
+      return banners;
+    } catch(e) {
+      throw(e);
+    }
+  }
+
   restaurants: Restaurant[] = [
     {
       uid: '12wefdss',

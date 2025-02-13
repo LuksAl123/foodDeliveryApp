@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
+import { CanLoad, Route, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
 import { ProfileService } from '../services/profile/profile.service';
@@ -26,11 +26,14 @@ export class AuthGuard implements CanLoad {
         this.profileService.getProfile().then(profile => {
           console.log('user profile', profile);
           if(profile && profile?.type == 'user') {
+            console.log('aqui1');
             return true;
           } else if(profile && profile?.type == 'admin') {
+            console.log('aqui2');
             this.router.navigateByUrl('/admin');
             return false;
           } else {
+            console.log('aqui3');
             this.authService.logout();
             this.router.navigateByUrl('/login');
             return false;

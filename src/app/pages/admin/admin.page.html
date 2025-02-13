@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>admin</ion-title>
+    <ion-title>Admin Control Panel</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="logout()">
         <ion-icon name="power-outline" color="white" slot="icon-only"></ion-icon>
@@ -10,5 +10,7 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-button class="ion-margin" expand="block" color="primary" routerLink="/admin/add-banner">Create Banner</ion-button>
 
 </ion-content>

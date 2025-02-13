@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: '',
     component: AdminPage
+  },
+  {
+    path: 'add-banner',
+    loadChildren: () => import('./add-banner/add-banner.module').then( m => m.AddBannerPageModule)
   }
 ];
 
@@ -13,4 +17,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
+
 export class AdminPageRoutingModule {}

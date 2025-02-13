@@ -25,12 +25,12 @@ export class HomePage implements OnInit, OnDestroy {
   addressSub: Subscription;
 
   constructor(
+    private router: Router,
     private api: ApiService,
     private addressService: AddressService,
     private global: GlobalService,
     private locationService: LocationService,
-    private mapService: GoogleMapsService,
-    private router: Router
+    private mapService: GoogleMapsService
   ) { }
 
   ngOnInit() {
@@ -59,7 +59,14 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   getBanners() {
-    this.banners = this.api.banners;
+    // this.banners = this.api.banners;
+    this.api.getBanners().then(data => {
+      console.log(data);
+      this.banners = data;
+    })
+    .catch(e => {
+      console.log(e);
+    })
   }
 
   nearbyApiCall() {

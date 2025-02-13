@@ -39,7 +39,7 @@ export class ProfileService {
         profile.phone,
         profile.name,
         uid,
-        profile.role,
+        profile.type,
         profile.status
       );
       this._profile.next(data);
