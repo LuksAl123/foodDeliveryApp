@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   firebase : {
-    apiKey: "AIzaSyCny9x4n1U9NUzJd-f7SfSEbCkq9lmBcwo",
+    apiKey: "AIzaSyBkDWR08i3B4G0crQa9XVu7TnTRjiEf0eI",
     authDomain: "fooddeliveryapp-47907.firebaseapp.com",
     projectId: "fooddeliveryapp-47907",
     storageBucket: "fooddeliveryapp-47907.firebasestorage.app",
