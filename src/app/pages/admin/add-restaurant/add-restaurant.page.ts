@@ -1,8 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgForm } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
+import { ApiService } from 'src/app/services/api/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
+import firebase from 'firebase/compat/app';
+import { Restaurant } from 'src/app/models/restaurant.model';
+import 'firebase/compat/firestore';
 
 @Component({
   selector: 'app-add-restaurant',
@@ -23,6 +29,8 @@ export class AddRestaurantPage implements OnInit {
 
   constructor(
     private authService: AuthService,
+    public afStorage: AngularFireStorage,
+    private apiService: ApiService,
     private global: GlobalService
   ) { }
 
@@ -30,8 +38,13 @@ export class AddRestaurantPage implements OnInit {
     this.getCities();
   }
 
-  getCities() {
-
+  async getCities() {
+    try {
+      this.cities = await this.apiService.getCities();
+    } catch(e) {
+      console.log(e);
+      this.global.errorToast();
+    }
   }
 
   async searchLocation() {
@@ -79,16 +92,75 @@ export class AddRestaurantPage implements OnInit {
     if(mimeType.match(/image\/*/) == null) return;
     const file = files[0];
     const filePath = 'restaurants/' + Date.now() + '_' + file.name;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      console.log('result: ', reader.result);
-      this.coverImage =  reader.result;
-    }
-    reader.readAsDataURL(file);
+    const fileRef = this.afStorage.ref(filePath);
+    const task = this.afStorage.upload(filePath, file);
+    task.snapshotChanges()
+    .pipe(
+      finalize(() => {
+        const downloadUrl = fileRef.getDownloadURL();
+        downloadUrl.subscribe(url => {
+          console.log('url: ', url);
+          if(url) {
+            this.coverImage = url;
+          }
+        })
+      })
+    )
+      .subscribe(url => {
+      console.log('data: ', url);
+    });
   }
 
   onSubmit(form: NgForm) {
     if(!form.valid) return;
+    if(!this.coverImage || this.coverImage == '') {
+      this.global.errorToast('Please select a cover image');
+      return;
+    }
+    if(this.location && this.location?.lat) this.addRestaurant(form);
+    else this.global.errorToast('Please select address for this restaurant');
   }
 
+  async addRestaurant(form: NgForm) {
+    try {
+      this.isLoading = true;
+      console.log(form.value);
+      const id = '1';
+      // const id = await this.authService.register(form.value, 'restaurant');
+      if(id) {
+        const position = new firebase.firestore.GeoPoint(this.location.lat, this.location.lng);
+        const restaurant = new Restaurant(
+          id,
+          this.coverImage ? this.coverImage : '',
+          form.value.res_name,
+          (form.value.res_name).toLowerCase(),
+          this.cuisines,
+          0,
+          form.value.delivery_time,
+          form.value.price,
+          form.value.phone,
+          form.value.email,
+          false,
+          form.value.description,
+          form.value.openTime,
+          form.value.closeTime,
+          form.value.city,
+          this.location.address,
+          'active',
+          0,
+          position
+        );
+        const result = await this.apiService.addRestaurant(restaurant, id);
+      } else {
+        this.global.showAlert('Restaurant Registration failed');
+      }
+      this.isLoading = false;
+    } catch(e) {
+      console.log(e);
+      this.isLoading = false;
+      let msg: string = 'Could not register the restaurant, please try again.';
+      if(e.code == 'auth/email-already-in-use') msg = e.message;
+      this.global.showAlert(msg);
+    }
+  }
 }

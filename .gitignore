@@ -1,3 +1,5 @@
 node_modules/
 .angular/
 typings/
+environment.prod.ts
+environment.ts
