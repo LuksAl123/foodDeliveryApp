@@ -61,7 +61,7 @@ export class HomePage implements OnInit, OnDestroy {
   getBanners() {
     // this.banners = this.api.banners;
     this.api.getBanners().then(data => {
-      console.log(data);
+      console.log('banner: ', data);
       this.banners = data;
     })
     .catch(e => {
@@ -69,15 +69,22 @@ export class HomePage implements OnInit, OnDestroy {
     })
   }
 
-  nearbyApiCall() {
-    console.log(this.location);
-    this.isLoading = false;
-    this.restaurants = this.api.restaurants;
+  async nearbyApiCall() {
+    try {
+      console.log(this.location);
+      this.isLoading = false;
+      this.restaurants = await this.api.getNearbyRestaurants(this.location.lat, this.location.lng);
+      console.log(this.restaurants);
+    } catch(e) { 
+      console.log(e);
+      this.global.errorToast();
+    }
   }
 
   async getNearbyRestaurants() {
     try {
       const position = await this.locationService.getCurrentLocation();
+      console.log('get nearby restaurants', position);
       const { latitude, longitude } = position.coords;
       const address = await this.mapService.getAddress(latitude, longitude);
       if(address) {
@@ -144,7 +151,7 @@ export class HomePage implements OnInit, OnDestroy {
   addAddress(val?) {
     let navData: NavigationExtras;
     if(val) {
-      val.from = 'home';      
+      val.from = 'home';
     } else {
       val = {
         from: 'home'

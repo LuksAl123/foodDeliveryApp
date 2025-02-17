@@ -125,8 +125,7 @@ export class AddRestaurantPage implements OnInit {
     try {
       this.isLoading = true;
       console.log(form.value);
-      const id = '1';
-      // const id = await this.authService.register(form.value, 'restaurant');
+      const id = await this.authService.register(form.value, 'restaurant');
       if(id) {
         const position = new firebase.firestore.GeoPoint(this.location.lat, this.location.lng);
         const restaurant = new Restaurant(
@@ -151,6 +150,10 @@ export class AddRestaurantPage implements OnInit {
           position
         );
         const result = await this.apiService.addRestaurant(restaurant, id);
+        console.log(result);
+        await this.apiService.addCategories(this.categories, id);
+        // form.result();
+        this.global.successToast('Restaurant Added Successfully');
       } else {
         this.global.showAlert('Restaurant Registration failed');
       }

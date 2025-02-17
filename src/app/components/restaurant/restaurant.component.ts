@@ -6,13 +6,14 @@ import { Restaurant } from 'src/app/models/restaurant.model';
   templateUrl: './restaurant.component.html',
   styleUrls: ['./restaurant.component.scss'],
 })
+
 export class RestaurantComponent implements OnInit {
 
   @Input() restaurant: Restaurant;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   getCuisine(cuisine) {
     return cuisine.join(', ');

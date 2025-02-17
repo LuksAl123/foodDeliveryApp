@@ -11,6 +11,7 @@ import { StorageService } from '../storage/storage.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class CartService {
 
   model = {} as Cart;
@@ -222,5 +223,4 @@ export class CartService {
         } else return false;
     } else return false;
   }
-
 }
