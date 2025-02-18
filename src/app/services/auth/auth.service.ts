@@ -22,6 +22,8 @@ export class AuthService {
       console.log(response);
       if(response.user) {
         this.setUserData(response.user.uid);
+        const user: any = await this.getUserData(response.user.uid);
+        return user.type;
       }
     } catch(e) {
       throw(e);
@@ -36,7 +38,7 @@ export class AuthService {
     this.storage.setStorage('uid', uid);
   }
 
-  async register(formValue,type?) {
+  async register(formValue, type?) {
     try {
       const registeredUser = await this.fireAuth.createUserWithEmailAndPassword(formValue.email, formValue.password);
       console.log('register user: ', registeredUser);
@@ -48,10 +50,15 @@ export class AuthService {
         type ? type : 'user',
         'active'
       );
-      // const data = userInstance.toPlainObject();
       await this.apiService.collection('users').doc(registeredUser.user.uid).set(Object.assign({}, data));
-      if(!type) await this.setUserData(registeredUser.user.uid);
-      return registeredUser.user.uid;
+      if(!type || type != 'restaurant') {
+        await this.setUserData(registeredUser.user.uid);
+      }
+      const userData = {
+        id: registeredUser.user.uid,
+        type: type ? type : 'user'
+      };
+      return userData;
     } catch(e) {
       throw(e);
     }
@@ -84,19 +91,41 @@ export class AuthService {
     }
   }
 
-  checkAuth() {
+  checkAuth(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.fireAuth.onAuthStateChanged(user => {
         console.log('auth user: ', user);
-        if(user) {
-          this.setUserData(user.uid);
-          resolve(user.uid);
-        } else {
-          this.logout();
-          reject(false);
-        }
+        resolve(user);
+        // if(user) {
+        //   this.setUserData(user.uid);
+        //   resolve(user.uid);
+        // } else {
+        //   // this.logout();
+        //   reject(false);
+        // }
       });
     });
   }
+
+  async checkUserAuth() {
+    try {
+      const user = await this.checkAuth();
+      if(user) {
+        this.setUserData(user.uid);
+        const profile: any = await this.getUserData(user.uid);
+        if(profile) return profile.type;
+        return false;
+      } else {
+        return false;
+      }
+    } catch(e) {
+      throw(e);
+    }
+  }
+
+  async getUserData(id) {
+    return (await (this.apiService.collection('users').doc(id).get().toPromise())).data();
+  }
+
 }
 

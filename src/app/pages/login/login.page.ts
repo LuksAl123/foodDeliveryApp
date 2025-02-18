@@ -52,12 +52,12 @@ export class LoginPage implements OnInit {
     this.isLogin = true;
     this.authService.login(form.value.email, form.value.password).then(data => {
       console.log(data);
-      this.navigate();
+      this.navigate(data);
       this.isLogin = false;
       form.reset();
     })
     .catch(e => {
-      console.log('e: ', e);
+      console.log(e);
       this.isLogin = false;
       let msg: string = 'Could not sign you in, please try again.';
       if (e.code === 'auth/invalid-credential') msg = 'Invalid email or password.';
@@ -65,8 +65,10 @@ export class LoginPage implements OnInit {
     });
   }
 
-  navigate() {
-    this.router.navigateByUrl('/tabs');
+  navigate(data?) {
+    let url = '/tabs';
+    if(data == 'admin') url = '/admin';
+    this.router.navigateByUrl(url);
   }
 
 }

@@ -32,8 +32,8 @@ export class ApiService {
     private adb: AngularFirestore
   ) { }
 
-  collection(path) {
-    return this.adb.collection(path);
+  collection(path, queryFn?) {
+    return this.adb.collection(path, queryFn);
   }
 
   geoCollection(path) {
@@ -81,6 +81,7 @@ export class ApiService {
         switchMap(async(data: any) => {
           let cityData = await data.docs.map(element => {
             const item = element.data();
+            item.uid = element.id;
             return item;
           });
           console.log(cityData);

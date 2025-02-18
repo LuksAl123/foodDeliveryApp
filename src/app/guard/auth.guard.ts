@@ -26,14 +26,12 @@ export class AuthGuard implements CanLoad {
         this.profileService.getProfile().then(profile => {
           console.log('user profile', profile);
           if(profile && profile?.type == 'user') {
-            console.log('aqui1');
+            console.log('user');
             return true;
           } else if(profile && profile?.type == 'admin') {
-            console.log('aqui2');
             this.router.navigateByUrl('/admin');
             return false;
           } else {
-            console.log('aqui3');
             this.authService.logout();
             this.router.navigateByUrl('/login');
             return false;

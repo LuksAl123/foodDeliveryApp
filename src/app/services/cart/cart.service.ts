@@ -214,8 +214,7 @@ export class CartService {
         lng1,
         // this.model.restaurant.latitude,
         // this.model.restaurant.longitude
-        lat1,
-        lng1
+        lat1, lng1
       );
         console.log('distance: ', distance);
         if(distance > radius) {

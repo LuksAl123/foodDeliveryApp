@@ -125,11 +125,11 @@ export class AddRestaurantPage implements OnInit {
     try {
       this.isLoading = true;
       console.log(form.value);
-      const id = await this.authService.register(form.value, 'restaurant');
-      if(id) {
+      const data = await this.authService.register(form.value, 'restaurant');
+      if(data?.id) {
         const position = new firebase.firestore.GeoPoint(this.location.lat, this.location.lng);
         const restaurant = new Restaurant(
-          id,
+          data.id,
           this.coverImage ? this.coverImage : '',
           form.value.res_name,
           (form.value.res_name).toLowerCase(),
@@ -149,9 +149,9 @@ export class AddRestaurantPage implements OnInit {
           0,
           position
         );
-        const result = await this.apiService.addRestaurant(restaurant, id);
+        const result = await this.apiService.addRestaurant(restaurant, data.id);
         console.log(result);
-        await this.apiService.addCategories(this.categories, id);
+        await this.apiService.addCategories(this.categories, data.id);
         // form.result();
         this.global.successToast('Restaurant Added Successfully');
       } else {
