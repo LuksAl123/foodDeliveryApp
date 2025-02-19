@@ -31,6 +31,10 @@ export class AuthGuard implements CanLoad {
         this.navigate('/login');
         return false;
       }
+  } 
+
+  Test () {
+    
   }
 
   navigate(url) {
