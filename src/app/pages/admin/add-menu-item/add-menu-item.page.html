@@ -3,26 +3,38 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/admin"></ion-back-button>
     </ion-buttons>
-    <ion-title>Add Restaurant</ion-title>
+    <ion-title>Add Menu Item</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content>
 
   <form #f1="ngForm" (ngSubmit)="onSubmit(f1)">
     <ion-list lines="none">
-      <ion-list-header>
-        <ion-label>Owner Details</ion-label>
-      </ion-list-header>
+  
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="person" slot="start" color="primary"></ion-icon> 
+        <ion-label>Select Restaurant</ion-label>
+        <ion-select
+          name="restaurant_id"
+          ngModel
+          #restaurant_id="ngModel"
+          required>
+          <ion-select-option *ngFor="let restaurant of restaurants" [value]="restaurant.uid">{{restaurant?.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-text color="danger" *ngIf="!restaurant_id.valid && restaurant_id.touched" class="ion-text-center">
+        <p class="errorMsg">* Select Restaurant.</p>
+      </ion-text>
+      
+      <ion-item color="light" class="ion-margin-bottom">
+        <ion-icon name="person" slot="start" color="primary"></ion-icon>
         <ion-input
           type="text"
           name="name"
           ngModel
           #name="ngModel"
           placeholder="Name"
-          required> 
+          required>
         </ion-input>
       </ion-item>
       <ion-text color="danger" *ngIf="!name.valid && name.touched">
@@ -30,7 +42,7 @@
       </ion-text>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="mail" slot="start" color="primary"></ion-icon> 
+        <ion-icon name="mail" slot="start" color="primary"></ion-icon>
         <ion-input
           type="email"
           name="email"
@@ -46,7 +58,7 @@
       </ion-text>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="call" slot="start" color="primary"></ion-icon> 
+        <ion-icon name="call" slot="start" color="primary"></ion-icon>
         <ion-input
           type="tel"
           name="phone"
@@ -54,8 +66,8 @@
           #phone="ngModel"
           placeholder="Phone"
           required
-          minlength="10"
-          maxlength="10">
+          minlength="11"
+          maxlength="11">
         </ion-input>
       </ion-item>
       <ion-text color="danger" *ngIf="!phone.valid && phone.touched">
@@ -63,7 +75,7 @@
       </ion-text>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="key" slot="start" color="primary"></ion-icon> 
+        <ion-icon name="key" slot="start" color="primary"></ion-icon>
         <ion-input
           type="password"
           name="password"
@@ -75,7 +87,7 @@
         </ion-input>
       </ion-item>
       <ion-text color="danger" *ngIf="!passwordCtrl.valid && passwordCtrl.touched" class="ion-text-center">
-        <p class="errorMsg">* Password must be of minimum 8 characters long.</p>
+        <p class="errorMsg">* Password must be of minimum 8 characters long</p>
       </ion-text>
     </ion-list>
 
@@ -84,13 +96,13 @@
         <ion-label>Restaurant Details</ion-label>
       </ion-list-header>
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="person" slot="start" color="primary"></ion-icon> 
+        <ion-icon name="person" slot="start" color="primary"></ion-icon>
         <ion-input
           type="text"
           name="res_name"
           ngModel
           #res_name="ngModel"
-          placeholder="Restaurant Name"
+          placeholder="Name"
           required>
         </ion-input>
       </ion-item>
@@ -106,7 +118,7 @@
           #description="ngModel"
           placeholder="Description">
         </ion-textarea>
-      </ion-item>      
+      </ion-item>
 
       <ion-item color="light" class="ion-margin-bottom">
         <ion-label>Open Time</ion-label>
@@ -118,7 +130,7 @@
           presentation="time">
         </ion-datetime>
       </ion-item>
-      <ion-text color="danger" *ngIf="!openTime.valid && openTime.touched" class="ion-text-center">
+      <ion-text color="danger" *ngIf="!openTime.valid && openTime.touched">
         <p class="errorMsg">* Select Opening Time.</p>
       </ion-text>
 
@@ -132,25 +144,11 @@
           presentation="time">
         </ion-datetime>
       </ion-item>
-      <ion-text color="danger" *ngIf="!closeTime.valid && closeTime.touched" class="ion-text-center">
+      <ion-text color="danger" *ngIf="!closeTime.valid && closeTime.touched">
         <p class="errorMsg">* Select Closing Time.</p>
       </ion-text>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-label>Select City</ion-label>
-        <ion-select
-          name="city"
-          ngModel
-          #city="ngModel"
-          required>
-          <ion-select-option *ngFor="let city of cities" [value]="city.uid">{{city?.name}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-text color="danger" *ngIf="!city.valid && city.touched" class="ion-text-center">
-        <p class="errorMsg">* Select City.</p>
-      </ion-text>
-
-      <ion-item class="ion-margin-bottom">
         <ion-label>
           Address
           <p class="ion-text-wrap" *ngIf="location && location?.lat">{{location?.address}}</p>
@@ -159,7 +157,7 @@
       </ion-item>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon> 
+        <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon>
         <ion-input
           type="number"
           name="price"
@@ -170,11 +168,11 @@
         </ion-input>
       </ion-item>
       <ion-text color="danger" *ngIf="!price.valid && price.touched">
-        <p class="errorMsg">* Please enter price for two persons</p>
+        <p class="errorMsg">* Please enter price for two people</p>
       </ion-text>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="time-outline" slot="start" color="primary"></ion-icon> 
+        <ion-icon name="time-outline" slot="start" color="primary"></ion-icon>
         <ion-input
           type="number"
           name="delivery_time"
@@ -191,43 +189,32 @@
       <ion-item>
         <h4>Cover Image</h4>
         <input type="file" (change)="preview($event)">
-        <p>
-          <img *ngIf="coverImage" [src]="coverImage">
-        </p>
+        <ion-thumbnail slot="end" *ngIf="coverImage">
+          <img [src]="coverImage"/>
+        </ion-thumbnail>
       </ion-item>
-
-      <ion-item>
-        <ion-input name="category" [(ngModel)]="category" placeholder="Enter New Category" type="text"></ion-input>
-        <ion-toggle mode="md" color="success" name="isCuisine" [(ngModel)]="isCuisine"></ion-toggle>
-      </ion-item>
-
-      <ion-button type="button" size="small" (click)="addCategory()" color="primary">ADD</ion-button>
-      <ion-button type="button" size="small" (click)="clearCategory()" color="danger">CLEAR</ion-button>
-      <p *ngIf="categories?.length > 0">Categories: {{getArrayAsString(categories)}}</p>      
-      <p *ngIf="cuisines?.length > 0">Cuisines: {{getArrayAsString(cuisines)}}</p>
 
     </ion-list>
 
-    <ion-button 
-      *ngIf="!isLoading" 
+    <ion-button
+      *ngIf="!isLoading"
       [disabled]="!f1.valid"
-      expand="block" 
+      expand="block"
       shape="round" 
-      type="submit" 
+      type="submit"
       color="primary">
       Save
     </ion-button>
 
     <div class="ion-text-center" *ngIf="isLoading">
-      <ion-button 
-        shape="round" 
-        color="primary" 
+      <ion-button
+        shape="round"
+        color="primary"
         [disabled]="!f1.valid">
         <ion-spinner name="circles"></ion-spinner>
       </ion-button>
     </div>
-    
+
   </form>
 
 </ion-content>
-

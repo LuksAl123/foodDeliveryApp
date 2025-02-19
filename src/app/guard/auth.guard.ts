@@ -18,28 +18,41 @@ export class AuthGuard implements CanLoad {
   async canLoad(
     route: Route,
     segments: UrlSegment[]): Promise<boolean> {
+      const roleType = route.data['type'];
       try {
-        const roleType = route.data['type'];
         const type = await this.authService.checkUserAuth();
-        if (type) {
-          if (type == roleType) {
-            return true;
+        if(type) {
+          if(type == roleType) return true;
+          else {
+            let url = '/tabs';
+            if(type == 'admin') url = '/admin';
+            this.navigate(url);
           }
+        } else {
+          this.checkForAlert(roleType);
         }
-        return false;
       } catch(e) {
-        this.navigate('/login');
-        return false;
+        console.log(e);
+        this.checkForAlert(roleType);
       }
-  } 
-
-  Test () {
-    
+      return false;
   }
 
   navigate(url) {
     this.router.navigateByUrl(url, {replaceUrl: true});
     return false;
+  }
+
+  async checkForAlert(roleType) {
+    const id = await this.authService.getId();
+    if(id) {
+      //check network
+      console.log('alert: ', id);
+      this.showAlert(roleType);
+    } else {
+      this.authService.logout();
+      this.navigate('/login');
+    }
   }
 
   showAlert(role) {
@@ -66,5 +79,6 @@ export class AuthGuard implements CanLoad {
     })
     .then(alertEl => alertEl.present());
   }
-
 }
+
+

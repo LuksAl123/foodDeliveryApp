@@ -61,7 +61,7 @@ export class HomePage implements OnInit, OnDestroy {
   getBanners() {
     // this.banners = this.api.banners;
     this.api.getBanners().then(data => {
-      console.log('banner: ', data);
+      console.log(data);
       this.banners = data;
     })
     .catch(e => {
@@ -72,9 +72,9 @@ export class HomePage implements OnInit, OnDestroy {
   async nearbyApiCall() {
     try {
       console.log(this.location);
-      this.isLoading = false;
       this.restaurants = await this.api.getNearbyRestaurants(this.location.lat, this.location.lng);
       console.log(this.restaurants);
+      this.isLoading = false;
     } catch(e) { 
       console.log(e);
       this.global.errorToast();
