@@ -108,6 +108,47 @@ export class ApiService {
     }
   }
 
+  async getRestaurants() {
+    try {
+      const restaurants = await this.collection('restaurants').get().pipe(
+        switchMap(async(data: any) => {
+          let restaurantData = await data.docs.map(element => {
+            const item = element.data();
+            return item;
+          });
+          console.log(restaurantData);
+          return restaurantData;
+        })
+      ).toPromise();
+      console.log(restaurants);
+      return restaurants;
+    } catch(e) {
+      throw(e);
+    }
+  }
+
+  async getRestaurantCategories(uid) {
+    try {
+      const categories = await this.collection(
+        'categories',
+        ref => ref.where('uid', '==', uid)
+      ).get().pipe(
+        switchMap(async(data: any) => {
+          let categoryData = await data.docs.map(element => {
+            const item = element.data();
+            return item;
+          });
+          console.log(categoryData);
+          return categoryData;
+        })
+      ).toPromise();
+      console.log(categories);
+      return categories;
+    } catch(e) {
+      throw(e);
+    }
+  }
+
   async getNearbyRestaurants(lat, lng): Promise<any> {
     try {
       const center = new firebase.firestore.GeoPoint(lat, lng);

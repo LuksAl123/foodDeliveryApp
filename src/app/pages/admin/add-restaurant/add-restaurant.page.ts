@@ -13,7 +13,7 @@ import 'firebase/compat/firestore';
 @Component({
   selector: 'app-add-restaurant',
   templateUrl: './add-restaurant.page.html',
-  styleUrls: ['./add-restaurant.page.scss'],
+  styleUrls: ['./add-restaurant.page.scss']
 })
 
 export class AddRestaurantPage implements OnInit {
