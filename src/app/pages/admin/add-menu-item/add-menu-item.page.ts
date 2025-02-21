@@ -23,6 +23,7 @@ export class AddMenuItemPage implements OnInit {
   veg = true;
   status = true;
   imageFile: any;
+  category: any;
 
   constructor(
     public global: GlobalService,
@@ -51,6 +52,7 @@ export class AddMenuItemPage implements OnInit {
       console.log(event);
       this.global.showLoader();
       this.categories = await this.apiService.getRestaurantCategories(event.detail.value);
+      this.category = '';
       this.global.hideLoader();
     } catch(e) {
       console.log(e);
@@ -62,19 +64,38 @@ export class AddMenuItemPage implements OnInit {
   async onSubmit(form: NgForm) {
     if(!form.valid || !this.image) return;
     try {
+      this.isLoading = true;
       const url = await this.uploadImage(this.imageFile);
       console.log(url);
-      const data: new Item(
-
-      );
+      if(!url) {
+        this.isLoading = false;
+        this.global.errorToast('Image not uploaded, please try again');
+        return;
+      }
+      const data = {
+        cover: url,
+        veg: this.veg,
+        status: this.status,
+        ...form.value
+      };
+      console.log('data: ', data);
+      await this.apiService.addMenuItem(data);
+      this.isLoading = false;
+      this.global.successToast('Menu Item Added Successfully');
     } catch(e) {
       console.log(e);
+      this.isLoading = false;
       this.global.errorToast();
     }
   }
 
   changeImage() {
-    this.filePickerRef.nativeElement.click();
+    console.log(this.filePickerRef);
+    if (this.filePickerRef && this.filePickerRef.nativeElement) {
+      this.filePickerRef.nativeElement.click();
+    } else {
+      console.error('filePickerRef is not defined');
+    }
   }
 
   onFileChosen(event) {
@@ -93,24 +114,27 @@ export class AddMenuItemPage implements OnInit {
   }
 
   uploadImage(imageFile) {
-    const mimeType = imageFile.type;
-    if(mimeType.match(/image\/*/) == null) return;
-    const file = imageFile;
-    const filePath = 'menu/' + Date.now() + '_' + file.name;
-    const fileRef = this.afStorage.ref(filePath);
-    const task = this.afStorage.upload(filePath, file);
-    task.snapshotChanges()
-    .pipe(
-      finalize(() => {
-        const downloadUrl = fileRef.getDownloadURL();
-        downloadUrl.subscribe(url => {
-          console.log('url: ', url);
-          if(url) {
-            this.image = url;
-          }
+    return new Promise((resolve, reject) => {
+      const mimeType = imageFile.type;
+      if(mimeType.match(/image\/*/) == null) return;
+      const file = imageFile;
+      const filePath = 'menu/' + Date.now() + '_' + file.name;
+      const fileRef = this.afStorage.ref(filePath);
+      const task = this.afStorage.upload(filePath, file);
+      task.snapshotChanges()
+      .pipe(
+        finalize(() => {
+          const downloadUrl = fileRef.getDownloadURL();
+          downloadUrl.subscribe(url => {
+            console.log('url: ', url);
+            if(url) {
+              resolve(url);
+            }
+          })
         })
-      })
-    ).toPromise();
+      ).subscribe(url => {
+        console.log(url);
+      });
+    });
   }
-
 }

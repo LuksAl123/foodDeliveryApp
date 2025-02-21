@@ -19,7 +19,6 @@ export class ApiService {
   radius = 20;
   firestore = firebase.firestore();
   GeoFirestore = geofirestore.initializeApp(this.firestore);
-
   restaurants: Restaurant[] = [];
   allRestaurants: Restaurant[] = [];
   restaurants1: Restaurant[] = [];
@@ -45,6 +44,7 @@ export class ApiService {
     return id.toString();
   }
 
+  // banner apis
   async addBanner(data) {
     try {
       const id = this.randomString();
@@ -75,6 +75,7 @@ export class ApiService {
     }
   }
 
+  // city apis
   async getCities() {
     try {
       const cities = await this.collection('cities').get().pipe(
@@ -95,6 +96,7 @@ export class ApiService {
     }
   }
 
+  // restaurant apis
   async addRestaurant(data: any, uid) {
     try {
       let restaurant: any = Object.assign({}, data);
@@ -127,23 +129,11 @@ export class ApiService {
     }
   }
 
-  async getRestaurantCategories(uid) {
+  async getRestaurantById(id): Promise<any> {
     try {
-      const categories = await this.collection(
-        'categories',
-        ref => ref.where('uid', '==', uid)
-      ).get().pipe(
-        switchMap(async(data: any) => {
-          let categoryData = await data.docs.map(element => {
-            const item = element.data();
-            return item;
-          });
-          console.log(categoryData);
-          return categoryData;
-        })
-      ).toPromise();
-      console.log(categories);
-      return categories;
+      const restaurant = (await (this.collection('restaurants').doc(id).get().toPromise())).data();
+      console.log(restaurant);
+      return restaurant;
     } catch(e) {
       throw(e);
     }
@@ -166,6 +156,29 @@ export class ApiService {
     }
   }
 
+  // category apis
+  async getRestaurantCategories(uid) {
+    try {
+      const categories = await this.collection(
+        'categories',
+        ref => ref.where('uid', '==', uid)
+      ).get().pipe(
+        switchMap(async(data: any) => {
+          let categoryData = await data.docs.map(element => {
+            const item = element.data();
+            return item;
+          });
+          console.log(categoryData);
+          return categoryData;
+        })
+      ).toPromise();
+      console.log(categories);
+      return categories;
+    } catch(e) {
+      throw(e);
+    }
+  }
+
   async addCategories(categories, uid) {
     try {
       categories.forEach(async(element) => {
@@ -178,6 +191,61 @@ export class ApiService {
         const result = await this.collection('categories').doc(id).set(Object.assign({}, data));
       });
       return true;
+    } catch(e) {
+      throw(e);
+    }
+  }
+
+  // menu
+  async addMenuItem(data) {
+    try {
+      const id = this.randomString();
+      const item = new Item(
+        id,
+        data.restaurant_id,
+        this.firestore.collection('categories').doc(data.category_id),
+        data.cover,
+        data.name,
+        data.description,
+        data.price,
+        data.veg,
+        data.status,
+        false,
+        0
+      );
+      let itemData = Object.assign({}, item);
+      delete itemData.quantity;
+      console.log(itemData);
+      const result = await this.collection('menu').doc(data.restaurant_id).collection('allItems').doc(id).set(itemData);
+      return true;
+    } catch(e) {
+      throw(e);
+    }
+  }
+
+  async getRestaurantMenu(uid) {
+    try {
+      const itemsRef = await this.collection('menu').doc(uid)
+            .collection('allItems', ref => ref.where('status', '==', true));
+      const items = itemsRef.get().pipe(
+        switchMap(async(data: any) => {
+          let itemData = await data.docs.map(element => {
+            let item = element.data();
+            item.cateogry_id.get()
+            .then(cData => {
+              item.category_Id = cData.data();
+            }).catch(e => {
+              throw(e);
+            })
+            return item;
+          });
+          console.log(itemData);
+          return itemData;
+        })
+      )
+      .toPromise();
+      console.log(items);
+      return items;
     } catch(e) {
       throw(e);
     }

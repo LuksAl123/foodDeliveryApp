@@ -8,11 +8,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
   <form #f1="ngForm" (ngSubmit)="onSubmit(f1)">
-
     <ion-list lines="none">
-
       <ion-item>
         <ion-label>Select Restaurant</ion-label>
         <ion-select
@@ -29,20 +26,22 @@
         <p class="errorMsg">* Select Restaurant.</p>
       </ion-text>
 
-      <ion-item>
-        <ion-label>Select Category</ion-label>
-        <ion-select
-          interface="popover"
-          name="category_id"
-          ngModel
-          #category_id="ngModel"
-          required>
-          <ion-select-option *ngFor="let category of categories" [value]="category.uid">{{category?.name}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-text color="danger" *ngIf="!category_id.valid && category_id.touched" class="ion-text-center">
-        <p class="errorMsg">* Select Category.</p>
-      </ion-text>
+      <div *ngIf="categories?.length > 0">
+        <ion-item>
+          <ion-label>Select Category</ion-label>
+          <ion-select
+            interface="popover"
+            name="category_id"
+            [(ngModel)]="category"
+            #category_id="ngModel"
+            required>
+            <ion-select-option *ngFor="let category of categories" [value]="category.uid">{{category?.name}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text color="danger" *ngIf="!category_id.valid && category_id.touched" class="ion-text-center">
+          <p class="errorMsg">* Select Category.</p>
+        </ion-text>
+      </div>
 
       <ion-item>
         <ion-icon name="person" slot="start" color="primary"></ion-icon>
@@ -97,9 +96,10 @@
       <div class="itemImage" *ngIf="!image || image == ''" (click)="changeImage()">
         <ion-icon name="cloud-upload-outline" color="primary"></ion-icon>
         <p>Upload Item Image here</p>
-        <input type="file" accept="image/jpeg" #filePicker (change)="onFileChosen($event)">
       </div>
-
+      
+      <input type="file" accept="image/jpeg" #filePicker (change)="onFileChosen($event)">
+      
       <div
         class="itemImage imageDiv" 
         *ngIf="image && image != ''" 
@@ -129,5 +129,4 @@
     </div>
 
   </form>
-
 </ion-content>

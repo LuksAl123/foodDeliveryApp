@@ -14,6 +14,7 @@ import { Item } from 'src/app/models/item.model';
   templateUrl: './items.page.html',
   styleUrls: ['./items.page.scss'],
 })
+
 export class ItemsPage implements OnInit, OnDestroy {
 
   id: any;
@@ -27,6 +28,7 @@ export class ItemsPage implements OnInit, OnDestroy {
     icon: 'fast-food-outline',
     title: 'No Menu Available'
   };
+
   // restaurants: any[] = [];  
   categories: Category[] = [];
   allItems: Item[] = [];
@@ -78,34 +80,35 @@ export class ItemsPage implements OnInit, OnDestroy {
           if(this.veg == true) this.items = this.allItems.filter(x => x.veg === true);
           else this.items = [...this.allItems];
         }
-      } 
-      
-    });    
+      }
+    });
     this.getItems();
   }
 
   async getItems() {
-    try {      
+    try {
       this.isLoading = true;
       this.data = {} as Restaurant;
       this.cartData = {};
       this.storedData = {};
-      setTimeout(async() => {      
-        // this.categories = this.api.categories;
-        this.allItems = this.api.allItems;
-        let data: any = this.api.restaurants1.filter(x => x.uid === this.id);
-        this.data = data[0];
-        this.categories = this.api.categories.filter(x => x.uid === this.id);
-        this.allItems = this.api.allItems.filter(x => x.uid === this.id);
-        this.allItems.forEach((element, index) => {
-          this.allItems[index].quantity = 0;
-        });
-        this.items = [...this.allItems];
-        console.log('items: ', this.items);
-        console.log('restaurant: ', this.data);
-        await this.cartService.getCartData();
-        this.isLoading = false;
-      }, 3000);
+      this.data = await this.api.getRestaurantById(this.id);
+      this.categories = await this.api.getRestaurantCategories(this.id);
+      this.allItems = await this.api.getRestaurantMenu(this.id);
+      this.items = [...this.allItems];
+      console.log('items: ', this.items);
+      console.log('restaurant: ', this.data);
+      await this.cartService.getCartData();
+      this.isLoading = false;
+      // setTimeout(async() => {
+      //   this.allItems = this.api.allItems;
+      //   // let data: any = this.api.restaurants1.filter(x => x.uid === this.id);
+      //   // this.data = data[0];
+
+      //   this.allItems = this.api.allItems.filter(x => x.uid === this.id);
+      //   this.allItems.forEach((element, index) => {
+      //     this.allItems[index].quantity = 0;
+      //   });
+      // }, 3000);
     } catch(e) {
       console.log(e);
     }
