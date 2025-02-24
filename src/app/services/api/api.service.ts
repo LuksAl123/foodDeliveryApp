@@ -226,17 +226,16 @@ export class ApiService {
   async getRestaurantMenu(uid) {
     try {
       const itemsRef = await this.collection('menu').doc(uid)
-            .collection('allItems', ref => ref.where('status', '==', true));
+          .collection('allItems', ref => ref.where('status', '==', true));
       const items = itemsRef.get().pipe(
         switchMap(async(data: any) => {
           let itemData = await data.docs.map(element => {
             let item = element.data();
-            item.cateogry_id.get()
-            .then(cData => {
-              item.category_Id = cData.data();
-            }).catch(e => {
-              throw(e);
-            })
+            // item.category_id.get()
+            // .then(cData => {
+            //   item.category_id = cData.data();
+            // })
+            // .catch(e => { throw(e); });
             return item;
           });
           console.log(itemData);
@@ -250,4 +249,5 @@ export class ApiService {
       throw(e);
     }
   }
+
 }

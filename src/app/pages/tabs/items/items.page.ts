@@ -94,6 +94,8 @@ export class ItemsPage implements OnInit, OnDestroy {
       this.data = await this.api.getRestaurantById(this.id);
       this.categories = await this.api.getRestaurantCategories(this.id);
       this.allItems = await this.api.getRestaurantMenu(this.id);
+      console.log('Fetched categories: ', this.categories);
+      console.log('Fetched items: ', this.allItems);
       this.items = [...this.allItems];
       console.log('items: ', this.items);
       console.log('restaurant: ', this.data);
@@ -135,7 +137,7 @@ export class ItemsPage implements OnInit, OnDestroy {
       }
     } else {
       this.cartService.quantityPlus(index, this.allItems, this.data);
-    }  
+    }
   }
 
   quantityMinus(item) {

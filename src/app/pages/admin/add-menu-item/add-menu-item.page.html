@@ -35,11 +35,11 @@
             [(ngModel)]="category"
             #category_id="ngModel"
             required>
-            <ion-select-option *ngFor="let category of categories" [value]="category.uid">{{category?.name}}</ion-select-option>
+            <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category?.name}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-text color="danger" *ngIf="!category_id.valid && category_id.touched" class="ion-text-center">
-          <p class="errorMsg">* Select Category.</p>
+          <p class="errorMsg">* Select Category</p>
         </ion-text>
       </div>
 
