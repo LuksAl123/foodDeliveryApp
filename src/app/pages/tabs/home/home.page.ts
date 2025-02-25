@@ -111,10 +111,7 @@ export class HomePage implements OnInit, OnDestroy {
   async getData() {
     try {
       this.restaurants = [];
-      // const address = await this.addressService.checkExistAddress(lat, lng, this.location);
-      const address = await this.addressService.checkExistAddress(this.location);
-      console.log('address change: ', address);
-      // if(!address) await this.nearbyApiCall(lat, lng);
+      await this.addressService.checkExistAddress(this.location);
     } catch(e) {
       console.log(e);
       this.global.errorToast();
