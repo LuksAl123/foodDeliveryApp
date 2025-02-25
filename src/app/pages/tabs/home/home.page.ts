@@ -90,7 +90,6 @@ export class HomePage implements OnInit, OnDestroy {
       if(address) {
         this.location = new Address(
           '',
-          '',
           address.address_components[0].short_name,
           address.formatted_address,
           '',

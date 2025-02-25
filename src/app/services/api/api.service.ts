@@ -231,11 +231,11 @@ export class ApiService {
         switchMap(async(data: any) => {
           let itemData = await data.docs.map(element => {
             let item = element.data();
-            // item.category_id.get()
-            // .then(cData => {
-            //   item.category_id = cData.data();
-            // })
-            // .catch(e => { throw(e); });
+            item.category_id.get()
+            .then(cData => {
+              item.category_id = cData.data();
+            })
+            .catch(e => { throw(e); });
             return item;
           });
           console.log(itemData);

@@ -2,30 +2,40 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Address } from 'src/app/models/address.model';
 import { ApiService } from '../api/api.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AddressService {
 
   radius = 7; // in km
-
   private _addresses = new BehaviorSubject<Address[]>([]);
   private _addressChange = new BehaviorSubject<Address>(null);
 
   get addresses() {
     return this._addresses.asObservable();
   }
+
   get addressChange() {
     return this._addressChange.asObservable();
   }
 
-  constructor(private api: ApiService) { }
+  constructor(
+    private authService: AuthService,
+    private api: ApiService
+  ) { }
 
-  getAddresses(limit?) {
+  async getUid() {
+    return await this.authService.getId();
+  }
+
+  async getAddresses(limit?) {
     try {
-      //user id
-      let allAddress: Address[] = this.api.addresses;
+      const uid = await this.getUid();
+      const addressRef = this.api.collection('address').doc(uid).collection('all');
+      let allAddress: Address[] = addressRef;
       console.log(allAddress);
       if(limit) {
         let address: Address[] = [];
@@ -43,23 +53,31 @@ export class AddressService {
     }
   }
 
-  addAddress(param) {
-    param.id = 'address1';
-    param.user_id = 'user1';
-    const currentAddresses = this._addresses.value;
-    const data = new Address(
-      param.id,
-      param.user_id,
-      param.title,
-      param.address,
-      param.landmark,
-      param.house,
-      param.lat,
-      param.lng
-    );
-    currentAddresses.push(data);
-    this._addresses.next(currentAddresses);
-    this._addressChange.next(data);
+  async addAddress(param) {
+    try {
+      const uid = await this.getUid();
+      const currentAddresses = this._addresses.value;
+      const data = new Address(
+        uid,
+        param.title,
+        param.address,
+        param.landmark,
+        param.house,
+        param.lat,
+        param.lng
+      );
+      let addressData = Object.assign({}, data);
+      delete addressData.id;
+      const response = await this.api.collection('address').doc(uid).collection('all').add(addressData);
+      console.log('response: ', response);
+      const id = await response.id;
+      const address = {...addressData, id};
+      currentAddresses.push(address);
+      this._addresses.next(currentAddresses);
+      this._addressChange.next(address);
+    } catch(e) {
+      throw(e);
+    }
   }
 
   updateAddress(id, param) {

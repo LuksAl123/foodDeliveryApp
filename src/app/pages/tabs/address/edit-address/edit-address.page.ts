@@ -12,6 +12,7 @@ import { GoogleMapsService } from 'src/app/services/google-maps/google-maps.serv
   templateUrl: './edit-address.page.html',
   styleUrls: ['./edit-address.page.scss'],
 })
+
 export class EditAddressPage implements OnInit {
 
   form: FormGroup;
@@ -129,9 +130,9 @@ export class EditAddressPage implements OnInit {
       this.toggleSubmit();
     } catch(e) {
       console.log(e);
+      this.isSubmitted = false;
       this.global.errorToast();
     }
-
   }
 
   async searchLocation() {
