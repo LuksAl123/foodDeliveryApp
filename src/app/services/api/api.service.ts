@@ -19,6 +19,7 @@ export class ApiService {
   radius = 20;
   firestore = firebase.firestore();
   GeoFirestore = geofirestore.initializeApp(this.firestore);
+  
   restaurants: Restaurant[] = [];
   allRestaurants: Restaurant[] = [];
   restaurants1: Restaurant[] = [];

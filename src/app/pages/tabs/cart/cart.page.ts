@@ -17,6 +17,7 @@ import { OrderService } from 'src/app/services/order/order.service';
   templateUrl: './cart.page.html',
   styleUrls: ['./cart.page.scss'],
 })
+
 export class CartPage implements OnInit, OnDestroy {
 
   @ViewChild(IonContent, {static: false}) content: IonContent;
@@ -44,7 +45,7 @@ export class CartPage implements OnInit, OnDestroy {
       console.log('location cart: ', address);
       this.location = address;
       if(this.location?.id && this.location?.id != '') {
-        const radius = this.addressService.radius;
+        const radius = this.orderService.getRadius();
         const result = await this.cartService.checkCart(this.location.lat, this.location.lng, radius);
         console.log(result);
         if(result) {

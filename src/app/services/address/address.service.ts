@@ -10,7 +10,6 @@ import { AuthService } from '../auth/auth.service';
 
 export class AddressService {
 
-  radius = 7; // in km
   uid: string;
 
   private _addresses = new BehaviorSubject<Address[]>([]);
