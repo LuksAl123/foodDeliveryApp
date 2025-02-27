@@ -20,20 +20,6 @@ export class SignupPage implements OnInit {
     private global: GlobalService) { }
 
   ngOnInit() {
-    this.isLoggedIn();
-  }
-
-  async isLoggedIn() {
-    try {
-      this.global.showLoader();
-      const val = await this.authService.getId();
-      console.log(val);
-      if(val) this.navigate('/tabs');
-      this.global.hideLoader();
-    } catch(e) {
-      console.log(e);
-      this.global.hideLoader();
-    }
   }
 
   onSubmit(form: NgForm) {
