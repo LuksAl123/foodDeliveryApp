@@ -2,7 +2,7 @@ import { Address } from "./address.model";
 import { Item } from "./item.model";
 import { Restaurant } from "./restaurant.model";
 
-export class Cart {
+class Cart {
     constructor(
         public restaurant: Restaurant,
         public items: Item[],

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, Router, UrlSegment } from '@angular/router';
+import { Strings } from 'src/app/enum/strings.enum';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Injectable({
@@ -13,6 +14,8 @@ export class AutoLoginGuard implements CanLoad {
     private router: Router
   ) { }
 
+  
+
   async canLoad(
     route: Route,
     segments: UrlSegment[]): Promise<boolean> {
@@ -20,7 +23,7 @@ export class AutoLoginGuard implements CanLoad {
         const val = await this.authService.getId();
         console.log(val);
         if(val) {
-          this.router.navigateByUrl('/tabs', {replaceUrl: true});
+          this.router.navigateByUrl(Strings.TABS, {replaceUrl: true});
           return false;
         } else {
           return true;

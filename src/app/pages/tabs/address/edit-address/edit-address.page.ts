@@ -37,13 +37,14 @@ export class EditAddressPage implements OnInit {
     this.checkForUpdate();
   }
 
-  checkForUpdate() {
+  async checkForUpdate() {
     this.isLoading = true;
     this.location.title = 'Locating...';
     this.isLocationFetched = false;
-    this.route.queryParams.subscribe(async(data) => {
-      console.log('data: ', data);
-      if(data['data']) {
+    // this.route.queryParams.subscribe(async(data) => {});
+    const data = this.route.snapshot.queryParams;
+    console.log('data: ', data);
+      if(data?.['data']) {
         const address = JSON.parse(data['data']);
         if(address?.lat) {
           this.center = {
@@ -64,7 +65,6 @@ export class EditAddressPage implements OnInit {
         this.update = false;
         this.initForm();
       }
-    });
   }
 
   initForm(address?) {

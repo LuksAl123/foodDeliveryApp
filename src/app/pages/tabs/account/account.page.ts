@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
+import { Strings } from 'src/app/enum/strings.enum';
 import { Order } from 'src/app/models/order.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CartService } from 'src/app/services/cart/cart.service';
@@ -53,10 +54,27 @@ export class AccountPage implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
+  confirmLogout() {
+    this.global.showAlert(
+      'Are you sure you want to sign-out?',
+      'Confirm',
+      [{
+        text: 'No',
+        role: 'cancel'
+      }, 
+      {
+        text: 'Yes',
+        handler: () => {
+          this.logout();
+        }
+      }]
+    );
+  }
+
   logout() {
     this.global.showLoader();
     this.authService.logout().then(() => {
-      this.navCtrl.navigateRoot('/login');
+      this.navCtrl.navigateRoot(Strings.LOGIN);
       this.global.hideLoader();
     })
     .catch(e => {

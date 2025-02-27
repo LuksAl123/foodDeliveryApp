@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Strings } from 'src/app/enum/strings.enum';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 
@@ -48,8 +49,8 @@ export class SignupPage implements OnInit {
   }
 
   navigate(type?) {
-    let url = '/tabs';
-    if(type == 'admin') url = '/admin';
+    let url = Strings.TABS;
+    if(type == 'admin') url = Strings.ADMIN;
     this.router.navigateByUrl(url);
   }
 

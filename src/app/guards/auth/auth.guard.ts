@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, Router, UrlSegment } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { Strings } from 'src/app/enum/strings.enum';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Injectable({
@@ -24,18 +25,20 @@ export class AuthGuard implements CanLoad {
         if(type) {
           if(type == roleType) return true;
           else {
-            let url = '/tabs';
-            if(type == 'admin') url = '/admin';
+            let url = Strings.TABS; // '/tabs'
+            if(type == 'admin') url = Strings.ADMIN; // '/admin'
             this.navigate(url);
+            return false;
           }
         } else {
           this.checkForAlert(roleType);
+          return false;
         }
       } catch(e) {
         console.log(e);
         this.checkForAlert(roleType);
+        return false;
       }
-      return false;
   }
 
   navigate(url) {
@@ -51,7 +54,7 @@ export class AuthGuard implements CanLoad {
       this.showAlert(roleType);
     } else {
       this.authService.logout();
-      this.navigate('/login');
+      this.navigate(Strings.LOGIN);
     }
   }
 
@@ -64,14 +67,14 @@ export class AuthGuard implements CanLoad {
           text: 'Logout',
           handler: () => {
             this.authService.logout();
-            this.navigate('/login');
+            this.navigate(Strings.LOGIN);
           }
         },
         {
           text: 'Retry',
           handler: () => {
-            let url = '/tabs';
-            if(role == 'admin') url = '/admin';
+            let url = Strings.TABS;
+            if(role == 'admin') url = Strings.ADMIN;
             this.navigate(url);
           }
         }

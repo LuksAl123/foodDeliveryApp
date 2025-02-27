@@ -62,6 +62,7 @@ export class ProfileService {
         profile.status
       );
       this._profile.next(data);
+      return data;
     } catch(e) {
       console.log(e);
       throw(e);
@@ -72,6 +73,7 @@ export class ProfileService {
     try {
       await this.authService.updateEmail(profile.email, param.email, password);
       await this.updateProfile(profile, param);
+      return profile;
     } catch(e) {
       throw(e);
     }

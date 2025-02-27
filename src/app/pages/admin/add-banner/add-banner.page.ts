@@ -48,7 +48,7 @@ export class AddBannerPage implements OnInit {
       .subscribe(url => {
       console.log('data: ', url);
     });
-  } 
+  }
 
   async saveBanner() {
     try {

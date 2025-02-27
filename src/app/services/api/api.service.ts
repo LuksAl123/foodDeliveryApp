@@ -51,6 +51,7 @@ export class ApiService {
       const id = this.randomString();
       data.id = id;
       await this.collection('banners').doc(id).set(data);
+      return true;
     } catch(e) {
       console.log(e);
       throw(e);
@@ -82,7 +83,7 @@ export class ApiService {
       const cities = await this.collection('cities').get().pipe(
         switchMap(async(data: any) => {
           let cityData = await data.docs.map(element => {
-            const item = element.data();
+            let item = element.data();
             item.uid = element.id;
             return item;
           });

@@ -129,6 +129,7 @@ export class HomePage implements OnInit, OnDestroy {
         }
       };
       const modal = await this.global.createModal(options);
+      console.log('modal value: ', modal);
       if(modal) {
         if(modal == 'add') {
           this.addAddress(this.location);
@@ -137,6 +138,11 @@ export class HomePage implements OnInit, OnDestroy {
         } else {
           this.location = modal;
           await this.getData();
+        }
+      } else {
+        console.log('location value: ', this.location);
+        if(!this.location || !this.location?.lat) {
+          this.searchLocation('home', 'home-modal');
         }
       }
     } catch(e) {

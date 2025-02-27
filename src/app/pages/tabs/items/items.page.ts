@@ -4,12 +4,12 @@ import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CartService } from 'src/app/services/cart/cart.service';
-import { take } from 'rxjs/operators';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
 import { GlobalService } from 'src/app/services/global/global.service';
-import { Cart } from 'src/app/models/cart.model';
+import { Cart } from 'src/app/interfaces/cart.interface';
+// import { Cart } from 'src/app/models/cart.model';
 
 @Component({
   selector: 'app-items',
@@ -43,16 +43,24 @@ export class ItemsPage implements OnInit, OnDestroy {
     private global: GlobalService
   ) { }
 
-  ngOnInit() {    
-    this.route.paramMap.pipe(take(1)).subscribe(paramMap => {
-      console.log('route data: ', paramMap);
-      if(!paramMap.has('restaurantId')) {
-        this.navCtrl.back();
-        return;
-      }
-      this.id = paramMap.get('restaurantId');
-      console.log('id: ', this.id);
-    });
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('restaurantId');
+    console.log('check id: ', id);
+    if(!id) {
+      this.navCtrl.back();
+      return;
+    }
+    this.id = id;
+    console.log('id: ', this.id);
+    // this.route.paramMap.pipe(take(1)).subscribe(paramMap => {
+    //   console.log('route data: ', paramMap);
+    //   if(!paramMap.has('restaurantId')) {
+    //     this.navCtrl.back();
+    //     return;
+    //   }
+    //   this.id = paramMap.get('restaurantId');
+    //   console.log('id: ', this.id);
+    // });
     this.cartSub = this.cartService.cart.subscribe(cart => {
       console.log('cart items: ', cart);
       this.cartData = {} as Cart;

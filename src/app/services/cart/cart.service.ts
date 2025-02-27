@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { Cart } from 'src/app/models/cart.model';
+// import { Cart } from 'src/app/models/cart.model';
 import { Item } from 'src/app/models/item.model';
 import { Order } from 'src/app/models/order.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { GlobalService } from '../global/global.service';
 import { StorageService } from '../storage/storage.service';
+import { Cart } from 'src/app/interfaces/cart.interface';
 
 @Injectable({
   providedIn: 'root'

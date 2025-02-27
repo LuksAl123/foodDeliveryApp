@@ -3,6 +3,7 @@ import { StorageService } from '../storage/storage.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from 'src/app/models/user.model';
 import { ApiService } from '../api/api.service';
+import { Strings } from 'src/app/enum/strings.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +32,11 @@ export class AuthService {
   }
 
   async getId() {
-    return (await this.storage.getStorage('uid')).value;
+    return (await this.storage.getStorage(Strings.UID)).value;
   }
 
   setUserData(uid) {
-    this.storage.setStorage('uid', uid);
+    this.storage.setStorage(Strings.UID, uid);
   }
 
   async register(formValue, type?) {
@@ -75,7 +76,7 @@ export class AuthService {
   async logout() {
     try {
       await this.fireAuth.signOut();
-      return this.storage.removeStorage('uid');
+      return this.storage.removeStorage(Strings.UID);
     } catch(e) {
       throw(e);
     }
