@@ -14,8 +14,6 @@ export class AutoLoginGuard implements CanLoad {
     private router: Router
   ) { }
 
-  
-
   async canLoad(
     route: Route,
     segments: UrlSegment[]): Promise<boolean> {

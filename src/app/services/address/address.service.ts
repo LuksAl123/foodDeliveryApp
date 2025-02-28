@@ -56,6 +56,7 @@ export class AddressService {
       .toPromise();
       console.log('allAddress: ', allAddress);
       this._addresses.next(allAddress);
+      return allAddress;
     } catch(e) {
       console.log(e);
       throw(e);
@@ -83,6 +84,7 @@ export class AddressService {
       currentAddresses.push(address);
       this._addresses.next(currentAddresses);
       this._addressChange.next(address);
+      return address;
     } catch(e) {
       throw(e);
     }
@@ -106,6 +108,7 @@ export class AddressService {
       currentAddresses[index] = data;
       this._addresses.next(currentAddresses);
       this._addressChange.next(data);
+      return data;
     } catch(e) {
       throw(e);
     }
@@ -117,6 +120,7 @@ export class AddressService {
       let currentAddresses = this._addresses.value;
       currentAddresses = currentAddresses.filter(x => x.id != param.id);
       this._addresses.next(currentAddresses);
+      return currentAddresses;
     } catch(e) {
       throw(e);
     }
@@ -150,6 +154,7 @@ export class AddressService {
       }
       console.log('loc: ', loc);
       this.changeAddress(loc);
+      return loc;
     } catch(e) {
       throw(e);
     }

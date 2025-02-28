@@ -11,6 +11,7 @@ import { LocationService } from 'src/app/services/location/location.service';
   templateUrl: './search-location.component.html',
   styleUrls: ['./search-location.component.scss'],
 })
+
 export class SearchLocationComponent implements OnInit, OnDestroy {
 
   query: string;
