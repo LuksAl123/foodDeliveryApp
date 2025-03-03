@@ -41,10 +41,12 @@
       <ion-text color="danger" *ngIf="!passwordCtrl.valid && passwordCtrl.touched" class="ion-text-center">
         <p class="errorMsg">* Password must be of minimum 8 characters long</p>
       </ion-text>
-      
+
     </ion-list>
 
-    <p class="ion-text-right" routerLink="/login/forgot-password">Forgot Password?</p>
+    <p class="ion-text-right">
+      <span routerLink="/login/forgot-password">Forgot Password?</span>
+    </p>
 
     <ion-button
       *ngIf="!isLogin"

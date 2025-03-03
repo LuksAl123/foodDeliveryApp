@@ -9,6 +9,7 @@ import { Restaurant } from 'src/app/models/restaurant.model';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
+import { Banner } from 'src/app/models/banner.model';
 
 @Injectable({
   providedIn: 'root'
@@ -49,8 +50,15 @@ export class ApiService {
   async addBanner(data) {
     try {
       const id = this.randomString();
-      data.id = id;
-      await this.collection('banners').doc(id).set(data);
+      // data.id = id;
+      const bannerData = new Banner(
+        id, 
+        data.banner,
+        data.status
+      );
+      let banner = Object.assign({}, bannerData);
+      delete banner.res_id;
+      await this.collection('banners').doc(id).set(banner);
       return true;
     } catch(e) {
       console.log(e);
@@ -60,7 +68,7 @@ export class ApiService {
 
   async getBanners() {
     try {
-      const banners = await this.collection('banners').get().pipe(
+      const banners: Banner[] = await this.collection('banners').get().pipe(
         switchMap(async(data: any) => {
           let bannerData = await data.docs.map(element => {
             const item = element.data();
@@ -101,7 +109,7 @@ export class ApiService {
   // restaurant apis
   async addRestaurant(data: any, uid) {
     try {
-      let restaurant: any = Object.assign({}, data);
+      let restaurant = Object.assign({}, data);
       delete restaurant.g;
       delete restaurant.distance;
       console.log(restaurant);
