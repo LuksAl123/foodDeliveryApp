@@ -10,6 +10,7 @@ import { GlobalService } from 'src/app/services/global/global.service';
   templateUrl: './address.page.html',
   styleUrls: ['./address.page.scss'],
 })
+
 export class AddressPage implements OnInit, OnDestroy {
 
   isLoading: boolean;
@@ -23,7 +24,8 @@ export class AddressPage implements OnInit, OnDestroy {
   constructor(
     private global: GlobalService,
     private addressService: AddressService,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.addressesSub = this.addressService.addresses.subscribe(address => {
@@ -31,6 +33,11 @@ export class AddressPage implements OnInit, OnDestroy {
       this.addresses = address;      
     });
     this.getAddresses();
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter AddressPage');
+    this.global.customStatusbar();
   }
 
   async getAddresses() {    
@@ -86,6 +93,7 @@ export class AddressPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if(this.addressesSub) this.addressesSub.unsubscribe();
+    this.global.customStatusbar(true);
   }
 
 }

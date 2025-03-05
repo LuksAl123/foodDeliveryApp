@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { register } from 'swiper/element/bundle';
-
-register();
+import { Platform } from '@ionic/angular';
+import { GlobalService } from './services/global/global.service';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +9,18 @@ register();
 })
 
 export class AppComponent {
-  constructor() {}
+
+  constructor(
+    private platform: Platform,
+    private global: GlobalService
+  ) {
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.global.customStatusbar();
+    })
+  }
+
 }

@@ -47,6 +47,11 @@ export class AccountPage implements OnInit, OnDestroy {
     this.getData();
   }
 
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter AccountPage');
+    this.global.customStatusbar(true);
+  }
+
   async getData() {
     this.isLoading = true;
     await this.profileService.getProfile();
@@ -80,7 +85,7 @@ export class AccountPage implements OnInit, OnDestroy {
     .catch(e => {
       console.log(e);
       this.global.hideLoader();
-      this.global.errorToast('Logout Failed! Check your internet connection.');
+      this.global.errorToast('Logout Failed! Check your internet connection');
     });
   }
 
@@ -106,12 +111,14 @@ export class AccountPage implements OnInit, OnDestroy {
         profile: this.profile
       },
       cssClass: 'custom-modal',
-      swipeToClose: true, // not in use anymore
-      // use below properties to close modal in ios, and remove swipetoclose
-      // breakpoints: [0, 0.5, 0.8],
-      // initialBreakpoint: 0.8
+      swipeToClose: true
     };
     const modal = await this.global.createModal(options);
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave AccountPage');
+    this.global.customStatusbar();
   }
 
   ngOnDestroy() {
