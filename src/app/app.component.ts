@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { GlobalService } from './services/global/global.service';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 @Component({
   selector: 'app-root',
@@ -20,6 +23,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.global.customStatusbar();
+      // SplashScreen.hide();
     })
   }
 

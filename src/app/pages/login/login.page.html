@@ -1,8 +1,8 @@
 <ion-content class="ion-padding">
 
   <ion-avatar>
-    <ion-img src="assets/imgs/1.jpg"></ion-img>
-  </ion-avatar>
+    <ion-img src="assets/imgs/logo.png"></ion-img>
+</ion-avatar>
 
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-list lines="none">
@@ -24,7 +24,7 @@
           <p class="errorMsg">* Please enter a valid email address</p>
         </ion-text>
       </div>
-      
+
       <ion-item color="light">
         <ion-icon name="key" slot="start" color="primary"></ion-icon>
         <ion-icon color="primary" slot="end" (click)="changeType()" [name]="type ? 'eye-outline' : 'eye-off-outline'"></ion-icon>

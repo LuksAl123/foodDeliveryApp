@@ -107,16 +107,17 @@ export class GlobalService {
   }
 
   async customStatusbar(primaryColor?: boolean) {
-    this.checkStatusbarStyle();
     if(!this.checkPlatformForWeb()) {
-      await StatusBar.setStyle({style: primaryColor ? Style.Dark : Style.Default});
-      if(isPlatform('android') && primaryColor) await StatusBar.setBackgroundColor({color: '#de0f17'});
+      await StatusBar.setStyle({style: primaryColor ? Style.Dark : Style.Light});
+      if(isPlatform('android')) await StatusBar.setBackgroundColor({color: primaryColor ? '#de0f17' : 'ffffff'});
     }
   }
 
-  async checkStatusbarStyle() {
-    const info = await StatusBar.getInfo();
-    console.log(info.style);
-  }
+  
+
+  // async checkStatusbarStyle() {
+  //   const info = await StatusBar.getInfo();
+  //   console.log(info.color);
+  // }
 
 }

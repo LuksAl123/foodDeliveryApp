@@ -43,6 +43,7 @@ export class EditProfileComponent implements OnInit {
       this.isSubmitted = false;
     } catch(e) {
       console.log(e);
+      this.isSubmitted = false;
       this.global.errorToast();
     }
   }

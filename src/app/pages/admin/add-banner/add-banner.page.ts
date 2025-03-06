@@ -62,7 +62,11 @@ export class AddBannerPage implements OnInit {
       this.global.hideLoader();
       this.global.successToast('Banner Created!');
     } catch(e) {
+      this.global.hideLoader();
       this.global.errorToast();
     }
   }
+
+  
+
 }

@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { switchMap } from 'rxjs';
-import { Address } from 'src/app/models/address.model';
 import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
-import { Order } from 'src/app/models/order.model';
-import { Restaurant } from 'src/app/models/restaurant.model';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
@@ -20,14 +17,6 @@ export class ApiService {
   radius = 20;
   firestore = firebase.firestore();
   GeoFirestore = geofirestore.initializeApp(this.firestore);
-  
-  restaurants: Restaurant[] = [];
-  allRestaurants: Restaurant[] = [];
-  restaurants1: Restaurant[] = [];
-  categories: Category[] = []; 
-  allItems: Item[] = [];
-  addresses: Address[] = [];
-  orders: Order[] = [];
 
   constructor(
     private adb: AngularFirestore
