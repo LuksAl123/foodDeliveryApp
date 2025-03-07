@@ -67,7 +67,8 @@ export class OrderService {
 
   async placeOrder(param) {
     try {
-      let data = {...param};
+      
+      let data = {...param, address: Object.assign({}, param.address)};
       data.order = JSON.stringify(param.order);
       const uid = await this.getUid();
       data.restaurant = await this.api.firestore.collection('restaurants').doc(param.restaurant_id);

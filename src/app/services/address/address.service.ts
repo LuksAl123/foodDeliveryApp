@@ -90,13 +90,14 @@ export class AddressService {
     }
   }
 
-  async updateAddress(id, param) {
+  async updateAddress(id, param, uid?) {
     try {
       await (await this.getAddressRef()).doc(id).update(param);
       let currentAddresses = this._addresses.value;
       const index = currentAddresses.findIndex(x => x.id == id);
       const data = new Address(
-        param.user_id,
+        // param.user_id,
+        uid,
         param.title,
         param.address,
         param.landmark,
@@ -107,6 +108,7 @@ export class AddressService {
       );
       currentAddresses[index] = data;
       this._addresses.next(currentAddresses);
+      console.log('check data: ', data);
       this._addressChange.next(data);
       return data;
     } catch(e) {

@@ -22,6 +22,7 @@ export class EditAddressPage implements OnInit {
   center: any;
   update: boolean;
   id: any;
+  uid: string;
   isLoading: boolean = false;
   from: string;
   check: boolean = false;
@@ -56,6 +57,7 @@ export class EditAddressPage implements OnInit {
           this.location.lng = this.center.lng;
           this.location.address = address.address;
           this.location.title = address.title;
+          if(address?.uid) this.uid = address.uid;
           if(!address?.from) this.id = address.id;
         }
         if(address.from) this.from = address.from;
@@ -124,7 +126,7 @@ export class EditAddressPage implements OnInit {
       };
       console.log('address: ', data);
       if(!this.id) await this.addressService.addAddress(data);
-      else await this.addressService.updateAddress(this.id, data);
+      else await this.addressService.updateAddress(this.id, data, this.uid);
       this.check = true;
       this.navCtrl.back();
       this.toggleSubmit();

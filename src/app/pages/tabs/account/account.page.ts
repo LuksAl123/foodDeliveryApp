@@ -53,10 +53,16 @@ export class AccountPage implements OnInit, OnDestroy {
   }
 
   async getData() {
-    this.isLoading = true;
-    await this.profileService.getProfile();
-    await this.orderService.getOrders();
-    this.isLoading = false;
+    try {
+      this.isLoading = true;
+      await this.profileService.getProfile();
+      await this.orderService.getOrders();
+      this.isLoading = false;
+    } catch(e) {
+      this.isLoading = false;
+      console.log(e);
+      this.global.errorToast();
+    }
   }
 
   confirmLogout() {

@@ -41,14 +41,21 @@ export class AddressPage implements OnInit, OnDestroy {
   }
 
   async getAddresses() {    
-    this.isLoading = true;
-    this.global.showLoader();
-    setTimeout(async() => {
+    try {
+      this.isLoading = true;
+      this.global.showLoader();
+      // setTimeout(async() => {
       await this.addressService.getAddresses();
       console.log(this.addresses);
       this.isLoading = false;
       this.global.hideLoader();
-    }, 3000);
+      // }, 3000);
+    } catch(e) {
+      console.log(e);
+      this.isLoading = false;
+      this.global.hideLoader();
+      this.global.errorToast();
+    }
   }
 
   getIcon(title) {

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from 'src/app/models/user.model';
 import { ApiService } from '../api/api.service';
 import { Strings } from 'src/app/enum/strings.enum';
 import { BehaviorSubject, map } from 'rxjs';
+import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, updateEmail } from '@angular/fire/auth';
 
   export class AuthUserId {
     constructor(public uid: string) {}
@@ -30,18 +30,24 @@ export class AuthService {
 
   constructor(
     private storage: StorageService,
-    private fireAuth: AngularFireAuth,
+    // private fireAuth: AngularFireAuth,
+    private fireAuth: Auth,
     private apiService: ApiService
   ) { }
 
   async login(email: string, password: string): Promise<any> {
     try {
-      const response = await this.fireAuth.signInWithEmailAndPassword(email, password);
+      const response = await signInWithEmailAndPassword(this.fireAuth, email, password);
       console.log(response);
       if(response.user) {
-        this.setUserData(response.user.uid);
         const user: any = await this.getUserData(response.user.uid);
-        return user.type;
+        if(user?.type == Strings.TYPE) {
+          this.setUserData(response.user.uid);
+          return user.type;
+        } else {
+          await this.logout();
+          return false;
+        }
       }
     } catch(e) {
       throw(e);
@@ -65,7 +71,7 @@ export class AuthService {
 
   async register(formValue, type?) {
     try {
-      const registeredUser = await this.fireAuth.createUserWithEmailAndPassword(formValue.email, formValue.password);
+      const registeredUser = await createUserWithEmailAndPassword(this.fireAuth, formValue.email, formValue.password);
       console.log('register user: ', registeredUser);
       const data = new User(
         formValue.email,
@@ -91,7 +97,7 @@ export class AuthService {
 
   async resetPassword(email: string) {
     try {
-      await this.fireAuth.sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(this.fireAuth, email);
     } catch(e) {
       throw(e);
     }
@@ -100,8 +106,9 @@ export class AuthService {
   async logout() {
     try {
       await this.fireAuth.signOut();
+      await this.storage.removeStorage(Strings.UID);
       this._uid.next(AuthService.UNKNOWN_USER);
-      return this.storage.removeStorage(Strings.UID);
+      return true;
     } catch(e) {
       throw(e);
     }
@@ -109,8 +116,8 @@ export class AuthService {
 
   async updateEmail(oldEmail, newEmail, password) {
     try {
-      const result = await this.fireAuth.signInWithEmailAndPassword(oldEmail, password);
-      await result.user.updateEmail(newEmail);
+      const result = await signInWithEmailAndPassword(this.fireAuth, oldEmail, password);
+      await updateEmail(result.user, newEmail);
     } catch(e) {
       console.log(e);
       throw(e);
@@ -119,7 +126,7 @@ export class AuthService {
 
   checkAuth(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.fireAuth.onAuthStateChanged(user => {
+      onAuthStateChanged(this.fireAuth, user => {
         console.log('auth user: ', user);
         resolve(user);
         // if(user) {
@@ -152,6 +159,5 @@ export class AuthService {
   async getUserData(id) {
     return (await (this.apiService.collection('users').doc(id).get().toPromise())).data();
   }
-
 }
 
