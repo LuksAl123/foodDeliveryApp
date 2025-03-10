@@ -39,21 +39,31 @@ export class AddressService {
 
   async getAddresses(limit?) {
     try {
-      let addressRef;
-      if(limit) addressRef = await this.getAddressRef(ref => ref.limit(limit));
-      else addressRef = await this.getAddressRef();
-      const allAddress: Address[] = await addressRef.get().pipe(
-        switchMap(async(data: any) => {
-          let itemData = await data.docs.map(element => {
-            let item = element.data();
-            item.id = element.id;
-            return item;
-          });
-          console.log(itemData);
-          return itemData;
-        })
-      )
-      .toPromise();
+      // let addressRef;
+      // if(limit) addressRef = await this.getAddressRef(ref => ref.limit(limit));
+      // else addressRef = await this.getAddressRef();
+      // const allAddress: Address[] = await addressRef.get().pipe(
+      //   switchMap(async(data: any) => {
+      //     let itemData = await data.docs.map(element => {
+      //       let item = element.data();
+      //       item.id = element.id;
+      //       return item;
+      //     });
+      //     console.log(itemData);
+      //     return itemData;
+      //   })
+      // )
+      // .toPromise();
+      const uid = await this.getUid();
+      const queryData = this.api.limitQuery(limit);
+      let querySnapshot;
+      if(limit) querySnapshot = await this.api.getDocs(`address/${uid}/all`, queryData);
+      else querySnapshot = await this.api.getDocs(`address/${uid}/all`);
+      const allAddress = await querySnapshot.docs.map((doc) => {
+        let item = doc.data();
+        item.id = doc.id;
+        return item;
+      });
       console.log('allAddress: ', allAddress);
       this._addresses.next(allAddress);
       return allAddress;
@@ -65,9 +75,10 @@ export class AddressService {
 
   async addAddress(param) {
     try {
+      const uid = await this.getUid();
       const currentAddresses = this._addresses.value;
       const data = new Address(
-        this.uid ? this.uid : await this.getUid(),
+        uid,
         param.title,
         param.address,
         param.landmark,
@@ -77,7 +88,8 @@ export class AddressService {
       );
       let addressData = Object.assign({}, data);
       delete addressData.id;
-      const response = await (await this.getAddressRef()).add(addressData);
+      // const response = await (await this.getAddressRef()).add(addressData);
+      const response = await this.api.addDocument(`address/${uid}/all`, addressData);
       console.log('response: ', response);
       const id = await response.id;
       const address = {...addressData, id};
@@ -92,7 +104,9 @@ export class AddressService {
 
   async updateAddress(id, param, uid?) {
     try {
-      await (await this.getAddressRef()).doc(id).update(param);
+      if(!uid) uid = await this.getUid();
+      // await (await this.getAddressRef()).doc(id).update(param);
+      await this.api.updateDocument(`address/${uid}/all/${id}`, param);
       let currentAddresses = this._addresses.value;
       const index = currentAddresses.findIndex(x => x.id == id);
       const data = new Address(
@@ -118,7 +132,9 @@ export class AddressService {
 
   async deleteAddress(param) {
     try {
-      await (await this.getAddressRef()).doc(param.id).delete();
+      const uid = await this.getUid();
+      // await (await this.getAddressRef()).doc(param.id).delete();
+      await this.api.deleteDocument(`address/${uid}/all/${param.id}`);
       let currentAddresses = this._addresses.value;
       currentAddresses = currentAddresses.filter(x => x.id != param.id);
       this._addresses.next(currentAddresses);
@@ -136,20 +152,32 @@ export class AddressService {
     try {
       console.log('check exist address: ', location);
       let loc: Address = location;
-      const addresses: Address[] = await (await this.getAddressRef(
-        ref => ref.where('lat', '==', location.lat).where('lng', '==', location.lng)
-          )).get().pipe(
-            switchMap(async(data: any) => {
-              let itemData = await data.docs.map(element => {
-                let item = element.data();
-                item.id = element.id;
-                return item;
-              });
-              console.log(itemData);
-              return itemData;
-            })
-          )
-          .toPromise();
+      // const addresses: Address[] = await (await this.getAddressRef(
+      //   ref => ref.where('lat', '==', location.lat).where('lng', '==', location.lng)
+      //     )).get().pipe(
+      //       switchMap(async(data: any) => {
+      //         let itemData = await data.docs.map(element => {
+      //           let item = element.data();
+      //           item.id = element.id;
+      //           return item;
+      //         });
+      //         console.log(itemData);
+      //         return itemData;
+      //       })
+      //     )
+      //     .toPromise();
+      const uid = await this.getUid();
+      // const queryData = [
+      //   this.api.whereQuery('lat', '==', location.lat),
+      //   this.api.whereQuery('lng', '==', location.lng)
+      // ];
+      // const querySnapshot = await this.api.getDocs(`address/${uid}/all`, ...queryData);
+      const querySnapshot = await this.api.getExistingAddress(`address/${uid}/all`, location.lat, location.lng);
+      const addresses = await querySnapshot.docs.map((doc) => {
+        let item = doc.data();
+        item.id = doc.id;
+        return item;
+      });
       console.log('addresses: ', addresses);
       if(addresses?.length > 0) {
         loc = addresses[0];

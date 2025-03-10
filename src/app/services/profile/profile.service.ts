@@ -25,14 +25,6 @@ export class ProfileService {
     try {
       const uid = await this.authService.getId();
       let profile: any = await (await (this.apiService.collection('users').doc(uid).get().toPromise())).data();
-      // let documentSnapshot = await this.apiService.collection('users').doc(uid).get().toPromise();
-      // let profile: any = documentSnapshot.data();
-  
-      // console.log('Document Snapshot:', documentSnapshot);
-      // if (!profile) {
-      //   console.error('Profile not found for UID:', uid);
-      //   return;
-      // }
       console.log('profile: ', profile);
       const data = new User(
         profile.email,
