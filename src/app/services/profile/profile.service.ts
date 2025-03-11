@@ -24,7 +24,14 @@ export class ProfileService {
   async getProfile() {
     try {
       const uid = await this.authService.getId();
-      let profile: any = await (await (this.apiService.collection('users').doc(uid).get().toPromise())).data();
+      // let profile: any = await (await (this.apiService.collection('users').doc(uid).get().toPromise())).data();
+      let profile: User;
+      const docSnap: any = await this.apiService.getDocById(`users/${uid}`);
+      if(docSnap?.exists()) {
+        profile = docSnap.data();
+      } else {
+        throw('No such document exists');
+      }
       console.log('profile: ', profile);
       const data = new User(
         profile.email,
@@ -44,7 +51,8 @@ export class ProfileService {
   async updateProfile(profile, param) {
     try {
       const uid = await this.authService.getId();
-      const result = await this.apiService.collection('users').doc(uid).update(param);
+      // const result = await this.apiService.collection('users').doc(uid).update(param);
+      const result = await this.apiService.updateDocument(`users/${uid}`, param);
       const data = new User(
         param.email,
         param.phone,

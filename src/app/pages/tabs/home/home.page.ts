@@ -10,6 +10,7 @@ import { ApiService } from 'src/app/services/api/api.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { GoogleMapsService } from 'src/app/services/google-maps/google-maps.service';
 import { LocationService } from 'src/app/services/location/location.service';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,8 @@ export class HomePage implements OnInit, OnDestroy {
     private addressService: AddressService,
     private global: GlobalService,
     private locationService: LocationService,
-    private mapService: GoogleMapsService
+    private mapService: GoogleMapsService,
+    private restaurantService:RestaurantService
   ) { }
 
   ngOnInit() {
@@ -73,7 +75,7 @@ export class HomePage implements OnInit, OnDestroy {
   async nearbyApiCall() {
     try {
       console.log(this.location);
-      this.restaurants = await this.api.getNearbyRestaurants(this.location.lat, this.location.lng);
+      this.restaurants = await this.restaurantService.getNearbyRestaurants(this.location.lat, this.location.lng);
       console.log(this.restaurants);
       this.isLoading = false;
     } catch(e) { 

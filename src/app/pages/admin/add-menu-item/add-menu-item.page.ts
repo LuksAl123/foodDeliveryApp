@@ -5,7 +5,10 @@ import { finalize } from 'rxjs';
 import { Category } from 'src/app/models/category.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from 'src/app/services/api/api.service';
+import { CategoryService } from 'src/app/services/category/category.service';
 import { GlobalService } from 'src/app/services/global/global.service';
+import { MenuService } from 'src/app/services/menu/menu.service';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 
 @Component({
   selector: 'app-add-menu-item',
@@ -28,7 +31,10 @@ export class AddMenuItemPage implements OnInit {
   constructor(
     public global: GlobalService,
     public apiService: ApiService,
-    private afStorage: AngularFireStorage
+    private afStorage: AngularFireStorage,
+    private restaurantService: RestaurantService,
+    private categoryService: CategoryService,
+    private menuService: MenuService
   ) { }
 
   ngOnInit() {
@@ -38,7 +44,7 @@ export class AddMenuItemPage implements OnInit {
   async getRestaurants() {
     try {
       this.global.showLoader();
-      this.restaurants = await this.apiService.getRestaurants();
+      this.restaurants = await this.restaurantService.getRestaurants();
       this.global.hideLoader();
     } catch(e) {
       console.log(e);
@@ -51,7 +57,7 @@ export class AddMenuItemPage implements OnInit {
     try {
       console.log(event);
       this.global.showLoader();
-      this.categories = await this.apiService.getRestaurantCategories(event.detail.value);
+      this.categories = await this.categoryService.getRestaurantCategories(event.detail.value);
       this.category = '';
       this.global.hideLoader();
     } catch(e) {
@@ -79,7 +85,7 @@ export class AddMenuItemPage implements OnInit {
         ...form.value
       };
       console.log('data: ', data);
-      await this.apiService.addMenuItem(data);
+      await this.menuService.addMenuItem(data);
       this.isLoading = false;
       this.global.successToast('Menu Item Added Successfully');
     } catch(e) {
@@ -90,12 +96,7 @@ export class AddMenuItemPage implements OnInit {
   }
 
   changeImage() {
-    console.log(this.filePickerRef);
-    if (this.filePickerRef && this.filePickerRef.nativeElement) {
-      this.filePickerRef.nativeElement.click();
-    } else {
-      console.error('filePickerRef is not defined');
-    }
+    this.filePickerRef.nativeElement.click();
   }
 
   onFileChosen(event) {

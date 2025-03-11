@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Address } from 'src/app/models/address.model';
 import { ApiService } from '../api/api.service';
 import { AuthService } from '../auth/auth.service';
@@ -10,7 +10,7 @@ import { AuthService } from '../auth/auth.service';
 
 export class AddressService {
 
-  uid: string;
+  // uid: string;
 
   private _addresses = new BehaviorSubject<Address[]>([]);
   private _addressChange = new BehaviorSubject<Address>(null);
@@ -32,10 +32,10 @@ export class AddressService {
     return await this.authService.getId();
   }
 
-  async getAddressRef(query?) {
-    if(!this.uid) this.uid = await this.getUid();
-    return await this.api.collection('address').doc(this.uid).collection('all', query);
-  }
+  // async getAddressRef(query?) {
+  //   if(!this.uid) this.uid = await this.getUid();
+  //   return await this.api.collection('address').doc(this.uid).collection('all', query);
+  // }
 
   async getAddresses(limit?) {
     try {

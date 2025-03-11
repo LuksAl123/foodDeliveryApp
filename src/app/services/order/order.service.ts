@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Order } from 'src/app/models/order.model';
 import { ApiService } from '../api/api.service';
 import { AuthService } from '../auth/auth.service';
@@ -32,31 +32,46 @@ export class OrderService {
     else return this.uid;
   }
 
-  async getOrderRef() {
-    this.uid = await this.getUid();
-    return this.api.collection('orders').doc(this.uid).collection('all');
-  }
+  // async getOrderRef() {
+  //   this.uid = await this.getUid();
+  //   return this.api.collection('orders').doc(this.uid).collection('all');
+  // }
 
   async getOrders() {
     try {
-      const orders: Order[] = await (await this.getOrderRef()).get().pipe(
-        switchMap(async(data: any) => {
-          let itemData = await data.docs.map(element => {
-            let item = element.data();
-            item.id = element.id;
-            item.order = JSON.parse(item.order);
-            item.restaurant.get()
-            .then(rData => {
-              item.restaurant = rData.data();
-            })
-            .catch(e => { throw(e); })
-            return item;
-          });
-          console.log(itemData);
-          return itemData;
-        })
-      )
-      .toPromise();
+      // const orders: Order[] = await (await this.getOrderRef()).get().pipe(
+      //   switchMap(async(data: any) => {
+      //     let itemData = await data.docs.map(element => {
+      //       let item = element.data();
+      //       item.id = element.id;
+      //       item.order = JSON.parse(item.order);
+      //       item.restaurant.get()
+      //       .then(rData => {
+      //         item.restaurant = rData.data();
+      //       })
+      //       .catch(e => { throw(e); })
+      //       return item;
+      //     });
+      //     console.log(itemData);
+      //     return itemData;
+      //   })
+      // )
+      // .toPromise();
+      this.uid = await this.getUid();
+      const querySnapshot = await this.api.getDocs(`orders/${this.uid}/all`);
+      const orders = await querySnapshot.docs.map((doc) => {
+        let item = doc.data();
+        item.id = doc.id;
+        item.order = JSON.parse(item.order);
+        this.api.getDocByReference(item.restaurant).then(docRestaurantSnap => {
+          if(docRestaurantSnap?.exists()) {
+            item.restaurant = docRestaurantSnap.data();
+          } else {
+            throw('No restaurant document exists');
+          }
+        });
+        return item;
+      });
       console.log('orders', orders);
       this._orders.next(orders);
       return orders;
@@ -67,13 +82,14 @@ export class OrderService {
 
   async placeOrder(param) {
     try {
-      let data = {...param, address: Object.assign({}, param.address)};
-      data.order = JSON.stringify(param.order);
       const uid = await this.getUid();
-      data.restaurant = await this.api.firestoreDB.collection('restaurants').doc(param.restaurant_id);
-      const orderRef = await (await this.getOrderRef()).add(data);
+      const order = JSON.stringify(param.order);
+      // const restaurant = this.api.document(`restaurants/${param.restaurant_id}`);
+      const restaurant = await this.api.firestoreDB.collection('restaurants').doc(param.restaurant_id);
+      const data = {...param, address: Object.assign({}, param.address), order, restaurant, uid};
+      // const orderRef = await (await this.getOrderRef()).add(data);
+      const orderRef = await this.api.addDocument(`orders/${uid}/all`, data);
       const order_id = await orderRef.id;
-      // let currentOrders = this._orders.value;
       console.log('latest order: ', param);
       let currentOrders: Order[] = [];
       currentOrders.push(new Order(

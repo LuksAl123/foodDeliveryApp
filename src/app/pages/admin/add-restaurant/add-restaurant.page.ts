@@ -9,6 +9,7 @@ import { GlobalService } from 'src/app/services/global/global.service';
 import firebase from 'firebase/compat/app';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import 'firebase/compat/firestore';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 
 @Component({
   selector: 'app-add-restaurant',
@@ -31,7 +32,8 @@ export class AddRestaurantPage implements OnInit {
     private authService: AuthService,
     public afStorage: AngularFireStorage,
     private apiService: ApiService,
-    private global: GlobalService
+    private global: GlobalService,
+    private restaurantService: RestaurantService
   ) { }
 
   ngOnInit() {
@@ -127,7 +129,7 @@ export class AddRestaurantPage implements OnInit {
       console.log(form.value);
       const data = await this.authService.register(form.value, 'restaurant');
       if(data?.id) {
-        const position = new firebase.firestore.GeoPoint(this.location.lat, this.location.lng);
+        const position = this.apiService.getGeoPoint(this.location.lat, this.location.lng);
         const restaurant = new Restaurant(
           data.id,
           this.coverImage ? this.coverImage : '',
@@ -149,7 +151,7 @@ export class AddRestaurantPage implements OnInit {
           0,
           position
         );
-        const result = await this.apiService.addRestaurant(restaurant, data.id);
+        const result = await this.restaurantService.addRestaurant(restaurant, data.id);
         console.log(result);
         await this.apiService.addCategories(this.categories, data.id);
         // form.result();

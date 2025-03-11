@@ -157,7 +157,13 @@ export class AuthService {
   }
 
   async getUserData(id) {
-    return (await (this.apiService.collection('users').doc(id).get().toPromise())).data();
+    // return (await (this.apiService.collection('users').doc(id).get().toPromise())).data();
+    const docSnap: any = await this.apiService.getDocById(`users/${id}`);
+      if(docSnap?.exists()) {
+        return docSnap.data();
+      } else {
+        throw('No such document exists');
+      }
   }
 }
 

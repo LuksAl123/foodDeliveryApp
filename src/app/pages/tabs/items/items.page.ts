@@ -9,6 +9,8 @@ import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { Cart } from 'src/app/interfaces/cart.interface';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { CategoryService } from 'src/app/services/category/category.service';
 // import { Cart } from 'src/app/models/cart.model';
 
 @Component({
@@ -40,7 +42,9 @@ export class ItemsPage implements OnInit, OnDestroy {
     private router: Router,
     private api: ApiService,
     private cartService: CartService,
-    private global: GlobalService
+    private global: GlobalService,
+    private restaurantService: RestaurantService,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
@@ -111,8 +115,8 @@ export class ItemsPage implements OnInit, OnDestroy {
       this.data = {} as Restaurant;
       this.cartData = {} as Cart;
       this.storedData = {} as Cart;
-      this.data = await this.api.getRestaurantById(this.id);
-      this.categories = await this.api.getRestaurantCategories(this.id);
+      this.data = await this.restaurantService.getRestaurantById(this.id);
+      this.categories = await this.categoryService.getRestaurantCategories(this.id);
       this.allItems = await this.api.getRestaurantMenu(this.id);
       this.items = [...this.allItems];
       console.log('items: ', this.items);
