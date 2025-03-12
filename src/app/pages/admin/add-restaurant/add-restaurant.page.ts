@@ -6,10 +6,11 @@ import { SearchLocationComponent } from 'src/app/components/search-location/sear
 import { ApiService } from 'src/app/services/api/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
-import firebase from 'firebase/compat/app';
+// import firebase from 'firebase/compat/app';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import 'firebase/compat/firestore';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { CategoryService } from 'src/app/services/category/category.service';
 
 @Component({
   selector: 'app-add-restaurant',
@@ -33,7 +34,8 @@ export class AddRestaurantPage implements OnInit {
     public afStorage: AngularFireStorage,
     private apiService: ApiService,
     private global: GlobalService,
-    private restaurantService: RestaurantService
+    private restaurantService: RestaurantService,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
@@ -153,7 +155,7 @@ export class AddRestaurantPage implements OnInit {
         );
         const result = await this.restaurantService.addRestaurant(restaurant, data.id);
         console.log(result);
-        await this.apiService.addCategories(this.categories, data.id);
+        await this.categoryService.addCategories(this.categories, data.id);
         // form.result();
         this.global.successToast('Restaurant Added Successfully');
       } else {

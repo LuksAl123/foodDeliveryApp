@@ -6,7 +6,7 @@ import { Address } from 'src/app/models/address.model';
 import { Banner } from 'src/app/models/banner.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { AddressService } from 'src/app/services/address/address.service';
-import { ApiService } from 'src/app/services/api/api.service';
+import { BannerService } from 'src/app/services/banner/banner.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { GoogleMapsService } from 'src/app/services/google-maps/google-maps.service';
 import { LocationService } from 'src/app/services/location/location.service';
@@ -28,12 +28,12 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private api: ApiService,
     private addressService: AddressService,
     private global: GlobalService,
     private locationService: LocationService,
     private mapService: GoogleMapsService,
-    private restaurantService:RestaurantService
+    private restaurantService:RestaurantService,
+    private bannerService: BannerService
   ) { }
 
   ngOnInit() {
@@ -63,7 +63,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   getBanners() {
     // this.banners = this.api.banners;
-    this.api.getBanners().then(data => {
+    this.bannerService.getBanners().then(data => {
       console.log('banners: ', data);
       this.banners = data;
     })

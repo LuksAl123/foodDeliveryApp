@@ -1,17 +1,14 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { switchMap } from 'rxjs';
-import { Category } from 'src/app/models/category.model';
-import { Item } from 'src/app/models/item.model';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
-import { Banner } from 'src/app/models/banner.model';
-import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, getDoc, getDocs, limit, query, updateDoc, where } from '@angular/fire/firestore';
-import { Restaurant } from 'src/app/models/restaurant.model';
-import { Address } from 'src/app/models/address.model';
-import { Order } from 'src/app/models/order.model';
+import { 
+  addDoc, collection, collectionData, deleteDoc, doc, endAt, 
+  Firestore, getDoc, getDocs, limit, orderBy, query, setDoc, 
+  startAt, updateDoc, where 
+} from '@angular/fire/firestore';
 import { GeoPoint, getFirestore } from 'firebase/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -23,14 +20,6 @@ export class ApiService {
   firestoreDB: any = firebase.firestore();
   db = getFirestore();
   GeoFirestore = geofirestore.initializeApp(this.firestoreDB);
-
-  restaurants: Restaurant[] = [];
-  allRestaurants: Restaurant[] = [];
-  restaurants1: Restaurant[] = [];
-  categories: Category[] = [];
-  allItems: Item[] = [];
-  addresses: Address[] = [];
-  orders: Order[] = [];
 
   constructor(
     private adb: AngularFirestore,
@@ -57,7 +46,7 @@ export class ApiService {
     let dataRef = this.collectionRef(path);
     let collection_data;
     if(id) collection_data = collectionData<any>(dataRef, {idField: 'id'});
-    else collection_data = collectionData<any>(dataRef);
+    else collection_data = collectionData<any>(dataRef); //valueChanges, for doc use docData
     return collection_data;
   }
 
@@ -76,6 +65,17 @@ export class ApiService {
     return getDocs<any, any>(q);
   }
 
+  searchRestaurantByName(start, end) {
+    let dataRef: any = this.collectionRef('restaurants');
+    const q = query(
+      dataRef,
+      orderBy('short_name'),
+      startAt(start),
+      endAt(end)
+    );
+    return getDocs<any, any>(q);
+  }
+
   getDocById(path) {
     const dataRef = this.docRef(path);
     return getDoc(dataRef);
@@ -88,6 +88,11 @@ export class ApiService {
   addDocument(path, data) {
     const dataRef = this.collectionRef(path);
     return addDoc<any, any>(dataRef, data); //add()
+  }
+
+  setDocument(path, data) {
+    const dataRef = this.docRef(path);
+    return setDoc<any, any>(dataRef, data); //set()
   }
 
   updateDocument(path, data) {
@@ -108,9 +113,9 @@ export class ApiService {
     where(fieldPath, condition, value);
   }
 
-  collection(path, queryFn?) {
-    return this.adb.collection(path, queryFn);
-  }
+  // collection(path, queryFn?) {
+  //   return this.adb.collection(path, queryFn);
+  // }
 
   geoCollection(path) {
     return this.GeoFirestore.collection(path);
@@ -124,17 +129,23 @@ export class ApiService {
   // city apis
   async getCities() {
     try {
-      const cities = await this.collection('cities').get().pipe(
-        switchMap(async(data: any) => {
-          let cityData = await data.docs.map(element => {
-            let item = element.data();
-            item.uid = element.id;
-            return item;
-          });
-          console.log(cityData);
-          return cityData;
-        })
-      ).toPromise();
+      // const cities = await this.collection('cities').get().pipe(
+      //   switchMap(async(data: any) => {
+      //     let cityData = await data.docs.map(element => {
+      //       let item = element.data();
+      //       item.uid = element.id;
+      //       return item;
+      //     });
+      //     console.log(cityData);
+      //     return cityData;
+      //   })
+      // ).toPromise();
+      const querySnapshot = await this.getDocs('cities');
+      const cities = await querySnapshot.docs.map(doc => {
+        let item = doc.data();
+        item.uid = doc.id;
+        return item;
+      });
       console.log(cities);
       return cities;
     } catch(e) {

@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ApiService } from 'src/app/services/api/api.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { Category } from 'src/app/models/category.model';
@@ -11,6 +10,7 @@ import { GlobalService } from 'src/app/services/global/global.service';
 import { Cart } from 'src/app/interfaces/cart.interface';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { MenuService } from 'src/app/services/menu/menu.service';
 // import { Cart } from 'src/app/models/cart.model';
 
 @Component({
@@ -40,11 +40,11 @@ export class ItemsPage implements OnInit, OnDestroy {
     private navCtrl: NavController,
     private route: ActivatedRoute,
     private router: Router,
-    private api: ApiService,
     private cartService: CartService,
     private global: GlobalService,
     private restaurantService: RestaurantService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private menuService: MenuService
   ) { }
 
   ngOnInit() {
@@ -117,7 +117,7 @@ export class ItemsPage implements OnInit, OnDestroy {
       this.storedData = {} as Cart;
       this.data = await this.restaurantService.getRestaurantById(this.id);
       this.categories = await this.categoryService.getRestaurantCategories(this.id);
-      this.allItems = await this.api.getRestaurantMenu(this.id);
+      this.allItems = await this.menuService.getRestaurantMenu(this.id);
       this.items = [...this.allItems];
       console.log('items: ', this.items);
       console.log('restaurant: ', this.data);

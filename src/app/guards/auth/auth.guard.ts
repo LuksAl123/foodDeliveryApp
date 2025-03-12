@@ -22,6 +22,7 @@ export class AuthGuard implements CanLoad {
       const roleType = route.data['type'];
       try {
         const type = await this.authService.checkUserAuth();
+        console.log(type);
         if(type) {
           if(type == roleType) return true;
           else {

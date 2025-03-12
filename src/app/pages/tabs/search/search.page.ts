@@ -61,19 +61,31 @@ export class SearchPage implements OnInit, OnDestroy {
     // });
   }
 
-  queryResults(start, end) {
-    this.isLoading = true;
-    this.api.collection('restaurants', ref => ref.orderBy('short_name').startAt(start).endAt(end))
-      .valueChanges()
-      .pipe(take(1))
-      .subscribe((data: any) => {
-        this.restaurants = data;
-        this.isLoading = false;
-      }, e => {
-        this.isLoading = false;
-        console.log(e);
-        this.global.errorToast();
+  async queryResults(start, end) {
+    // this.isLoading = true;
+    // this.api.collection('restaurants', ref => ref.orderBy('short_name').startAt(start).endAt(end))
+    //   .valueChanges()
+    //   .pipe(take(1))
+    //   .subscribe((data: any) => {
+    //     this.restaurants = data;
+    //     this.isLoading = false;
+    //   }, e => {
+    //     this.isLoading = false;
+    //     console.log(e);
+    //     this.global.errorToast();
+    //   });
+    try {
+      this.isLoading = true;
+      const snapshot = await this.api.searchRestaurantByName(start, end);
+      this.restaurants = await snapshot.docs.map(doc => {
+        return doc.data();
       });
+      this.isLoading = false;
+    } catch(e) {
+      console.log(e);
+      this.isLoading = false;
+      this.global.errorToast();
+    }
   }
 
   async onSearchChange(event) {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-// import { switchMap } from 'rxjs';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from '../api/api.service';
 

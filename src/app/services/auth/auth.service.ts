@@ -41,7 +41,7 @@ export class AuthService {
       console.log(response);
       if(response.user) {
         const user: any = await this.getUserData(response.user.uid);
-        if(user?.type == Strings.TYPE) {
+        if(user?.type == Strings.TYPE || user?.type == 'admin') {
           this.setUserData(response.user.uid);
           return user.type;
         } else {
@@ -81,7 +81,8 @@ export class AuthService {
         type ? type : 'user',
         'active'
       );
-      await this.apiService.collection('users').doc(registeredUser.user.uid).set(Object.assign({}, data));
+      // await this.apiService.collection('users').doc(registeredUser.user.uid).set(Object.assign({}, data));
+      await this.apiService.setDocument(`users/${registeredUser.user.uid}`, Object.assign({}, data));
       if(!type || type != 'restaurant') {
         await this.setUserData(registeredUser.user.uid);
       }
