@@ -116,8 +116,10 @@ export class AccountPage implements OnInit, OnDestroy {
       componentProps: {
         profile: this.profile
       },
-      cssClass: 'custom-modal',
-      swipeToClose: true
+      // cssClass: 'custom-modal',
+      // swipeToClose: true,
+      breakpoints: [0, 0.5, 0.8],
+      initialBreakpoint: 0.8
     };
     const modal = await this.global.createModal(options);
   }

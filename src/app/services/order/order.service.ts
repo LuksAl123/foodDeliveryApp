@@ -58,7 +58,7 @@ export class OrderService {
       // )
       // .toPromise();
       this.uid = await this.getUid();
-      const querySnapshot = await this.api.getDocs(`orders/${this.uid}/all`);
+      const querySnapshot = await this.api.getDocs('orders');
       const orders = await querySnapshot.docs.map((doc) => {
         let item = doc.data();
         item.id = doc.id;
@@ -85,16 +85,18 @@ export class OrderService {
       const uid = await this.getUid();
       const order = JSON.stringify(param.order);
       // const restaurant = this.api.document(`restaurants/${param.restaurant_id}`);
-      const restaurant = await this.api.firestoreDB.collection('restaurants').doc(param.restaurant_id);
-      const data = {...param, address: Object.assign({}, param.address), order, restaurant, uid};
+      const restaurant = this.api.document(`restaurants/${param.restaurant_id}`);
+      const user = this.api.document(`users/${uid}`);
+      const data = {...param, address: Object.assign({}, param.address), order, restaurant, uid, user};
       // const orderRef = await (await this.getOrderRef()).add(data);
-      const orderRef = await this.api.addDocument(`orders/${uid}/all`, data);
+      const orderRef = await this.api.addDocument('orders', data);
       const order_id = await orderRef.id;
       console.log('latest order: ', param);
       let currentOrders: Order[] = [];
       currentOrders.push(new Order(
         param.address,
         param.restaurant,
+        user,
         param.restaurant_id,
         param.order,
         param.total,

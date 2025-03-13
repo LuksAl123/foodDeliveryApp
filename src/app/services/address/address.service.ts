@@ -167,12 +167,11 @@ export class AddressService {
       //     )
       //     .toPromise();
       const uid = await this.getUid();
-      // const queryData = [
-      //   this.api.whereQuery('lat', '==', location.lat),
-      //   this.api.whereQuery('lng', '==', location.lng)
-      // ];
-      // const querySnapshot = await this.api.getDocs(`address/${uid}/all`, ...queryData);
-      const querySnapshot = await this.api.getExistingAddress(`address/${uid}/all`, location.lat, location.lng);
+      const queryData = [
+        this.api.whereQuery('lat', '==', location.lat),
+        this.api.whereQuery('lng', '==', location.lng)
+      ];
+      const querySnapshot = await this.api.getDocs(`address/${uid}/all`, ...queryData);
       const addresses = await querySnapshot.docs.map((doc) => {
         let item = doc.data();
         item.id = doc.id;

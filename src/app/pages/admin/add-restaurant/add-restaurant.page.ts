@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+// import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgForm } from '@angular/forms';
-import { finalize } from 'rxjs';
+// import { finalize } from 'rxjs';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
 import { ApiService } from 'src/app/services/api/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 // import firebase from 'firebase/compat/app';
 import { Restaurant } from 'src/app/models/restaurant.model';
-import 'firebase/compat/firestore';
+// import 'firebase/compat/firestore';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { CategoryService } from 'src/app/services/category/category.service';
 
@@ -31,7 +31,7 @@ export class AddRestaurantPage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    public afStorage: AngularFireStorage,
+    // public afStorage: AngularFireStorage,
     private apiService: ApiService,
     private global: GlobalService,
     private restaurantService: RestaurantService,
@@ -88,7 +88,7 @@ export class AddRestaurantPage implements OnInit {
     return array.join(', ');
   }
 
-  preview(event) {
+  async preview(event) {
     console.log(event);
     const files = event.target.files;
     if(files.length == 0) return;
@@ -96,23 +96,30 @@ export class AddRestaurantPage implements OnInit {
     if(mimeType.match(/image\/*/) == null) return;
     const file = files[0];
     const filePath = 'restaurants/' + Date.now() + '_' + file.name;
-    const fileRef = this.afStorage.ref(filePath);
-    const task = this.afStorage.upload(filePath, file);
-    task.snapshotChanges()
-    .pipe(
-      finalize(() => {
-        const downloadUrl = fileRef.getDownloadURL();
-        downloadUrl.subscribe(url => {
-          console.log('url: ', url);
-          if(url) {
-            this.coverImage = url;
-          }
-        })
-      })
-    )
-      .subscribe(url => {
-      console.log('data: ', url);
-    });
+    // const fileRef = this.afStorage.ref(filePath);
+    // const task = this.afStorage.upload(filePath, file);
+    // task.snapshotChanges()
+    // .pipe(
+    //   finalize(() => {
+    //     const downloadUrl = fileRef.getDownloadURL();
+    //     downloadUrl.subscribe(url => {
+    //       console.log('url: ', url);
+    //       if(url) {
+    //         this.coverImage = url;
+    //       }
+    //     })
+    //   })
+    // )
+    //   .subscribe(url => {
+    //   console.log('data: ', url);
+    // });
+    try {
+      const url = await this.apiService.uploadImage(file, filePath);
+      this.coverImage = url;
+    } catch(e) {
+      console.log(e);
+      this.global.errorToast('Image upload fialed');
+    }
   }
 
   onSubmit(form: NgForm) {

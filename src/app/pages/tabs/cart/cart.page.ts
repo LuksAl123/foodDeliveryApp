@@ -113,11 +113,13 @@ export class CartPage implements OnInit, OnDestroy {
     try {
       const options = {
         component: SearchLocationComponent,
-        swipeToClose: true,
-        cssClass: 'custom-modal',
+        // swipeToClose: true,
+        // cssClass: 'custom-modal',
         componentProps: {
           from: 'cart'
-        }
+        },
+        breakpoints: [0, 0.5, 0.8],
+        initialBreakpoint: 0.8
       };
       const address = await this.global.createModal(options);
       if(address) {

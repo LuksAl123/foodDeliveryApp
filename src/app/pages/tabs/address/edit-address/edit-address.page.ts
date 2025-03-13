@@ -141,8 +141,10 @@ export class EditAddressPage implements OnInit {
     try {
       const options = {
         component: SearchLocationComponent,
-        cssClass: 'address-modal',
-        swipeToClose: true,
+        // cssClass: 'address-modal',
+        // swipeToClose: true,
+        breakpoints: [0, 0.5, 0.7, 0.9],
+        initialBreakpoint: 0.7
       };
       const location = await this.global.createModal(options);
       console.log('location: ', location);

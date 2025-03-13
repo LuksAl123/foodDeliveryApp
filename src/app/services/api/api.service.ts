@@ -9,6 +9,7 @@ import {
 } from '@angular/fire/firestore';
 import { GeoPoint, getFirestore } from 'firebase/firestore';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { getDownloadURL, ref, Storage, uploadBytes } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class ApiService {
 
   constructor(
     private adb: AngularFirestore,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private storage: Storage
   ) { }
 
   getGeoPoint(lat, lng) {
@@ -59,11 +61,11 @@ export class ApiService {
     return getDocs<any, any>(dataRef); //get()
   }
 
-  getExistingAddress(path, lat, lng) {
-    let dataRef: any = this.collectionRef(path);
-    const q = query(dataRef, where('lat', '==', lat), where('lng', '==', lng));
-    return getDocs<any, any>(q);
-  }
+  // getExistingAddress(path, lat, lng) {
+  //   let dataRef: any = this.collectionRef(path);
+  //   const q = query(dataRef, where('lat', '==', lat), where('lng', '==', lng));
+  //   return getDocs<any, any>(q);
+  // }
 
   searchRestaurantByName(start, end) {
     let dataRef: any = this.collectionRef('restaurants');
@@ -110,7 +112,18 @@ export class ApiService {
   }
 
   whereQuery(fieldPath, condition, value) {
-    where(fieldPath, condition, value);
+    return where(fieldPath, condition, value);
+  }
+
+  async uploadImage(file, filePath) {
+    try {
+      const fileRef = ref(this.storage, filePath);
+      const task = await uploadBytes(fileRef, file);
+      const url = getDownloadURL(fileRef);
+      return url;
+    } catch(e) {
+      throw(e);
+    }
   }
 
   // collection(path, queryFn?) {

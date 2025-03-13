@@ -19,22 +19,24 @@
   </ion-row>
 
   <app-loading-restaurant *ngIf="isLoading"></app-loading-restaurant>
-  <app-empty-screen [model]="model" *ngIf="!isLoading && categories?.length == 0"></app-empty-screen>
+  <app-empty-screen [model]="model" *ngIf="!isLoading && (categories?.length == 0 || items?.length == 0)"></app-empty-screen>
 
-  <ion-list lines="none" *ngFor="let category of categories">
-    <ion-list-header *ngIf="checkItemCategory(category.id)">
-      {{category?.name}}
-    </ion-list-header>
-    <ng-container *ngFor="let item of items; let i = index">
-      <app-item
-        *ngIf="category.id == item.category_id.id"
-        [item]="item"
-        [index]="i"
-        (add)="quantityPlus($event)"
-        (minus)="quantityMinus($event)">
-      </app-item>
-    </ng-container>
-  </ion-list>
+  <ng-container *ngFor="let category of categories">
+    <ion-list lines="none" *ngIf="checkItemCategory(category.id)">
+      <ion-list-header>
+        {{category?.name}}
+      </ion-list-header>
+      <ion-item-group *ngFor="let item of items; let i = index">
+        <app-item
+          *ngIf="category.id == item.category_id.id"
+          [item]="item"
+          [index]="i"
+          (add)="quantityPlus($event)"
+          (minus)="quantityMinus($event)">
+        </app-item>
+      </ion-item-group>
+    </ion-list>
+  </ng-container>
 
 </ion-content>
 

@@ -6,8 +6,6 @@ import { LoadingRestaurantComponent } from './loading-restaurant/loading-restaur
 import { EmptyScreenComponent } from './empty-screen/empty-screen.component';
 import { SearchLocationComponent } from './search-location/search-location.component';
 
-
-
 @NgModule({
   declarations: [
     RestaurantComponent,
@@ -26,4 +24,5 @@ import { SearchLocationComponent } from './search-location/search-location.compo
     SearchLocationComponent
   ],
 })
+
 export class ComponentsModule { }
