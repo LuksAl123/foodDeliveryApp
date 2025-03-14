@@ -38,7 +38,10 @@ const routes: Routes = [
     path: 'address',
     loadChildren: () => import('./address/address.module').then( m => m.AddressPageModule)
   },
-  
+  {
+    path: 'cart/payment-option',
+    loadChildren: () => import('./cart/payment-option/payment-option.module').then( m => m.PaymentOptionPageModule)
+  },
 ];
 
 @NgModule({

@@ -132,6 +132,7 @@ export class AccountPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if(this.ordersSub) this.ordersSub.unsubscribe();
     if(this.profileSub) this.profileSub.unsubscribe();
+    this.orderService.reset();
   }
 
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { GlobalService } from './services/global/global.service';
 import { register } from 'swiper/element/bundle';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 register();
 
@@ -12,10 +13,8 @@ register();
 })
 
 export class AppComponent {
-
   constructor(
-    private platform: Platform,
-    private global: GlobalService
+    private platform: Platform, private global: GlobalService
   ) {
     this.initializeApp();
   }
@@ -23,7 +22,9 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.global.customStatusbar();
-      // SplashScreen.hide();
+      // this.statusBar.styleDefault();
+      // this.splashScreen.hide();
+      SplashScreen.hide();
     })
   }
 

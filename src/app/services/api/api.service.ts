@@ -5,11 +5,12 @@ import * as geofirestore from 'geofirestore';
 import { 
   addDoc, collection, collectionData, deleteDoc, doc, endAt, 
   Firestore, getDoc, getDocs, limit, orderBy, query, setDoc, 
-  startAt, updateDoc, where 
+  startAt, updateDoc, where
 } from '@angular/fire/firestore';
 import { GeoPoint, getFirestore } from 'firebase/firestore';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { getDownloadURL, ref, Storage, uploadBytes } from '@angular/fire/storage';
+import { getDownloadURL, ref, Storage } from '@angular/fire/storage';
+import { uploadBytes } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root'

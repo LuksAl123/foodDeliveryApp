@@ -3,5 +3,7 @@ export enum Strings {
     TABS = '/tabs',
     LOGIN = '/login',
     ADMIN = '/admin',
-    TYPE = 'user'
+    TYPE = 'user',
+    CART_STORAGE = 'fooddeliveryapp_user_cart',
+    CART_ORDER = 'fooddeliveryapp_user_cart_order'
 }

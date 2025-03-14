@@ -8,6 +8,7 @@ import { Restaurant } from 'src/app/models/restaurant.model';
 import { GlobalService } from '../global/global.service';
 import { StorageService } from '../storage/storage.service';
 import { Cart } from 'src/app/interfaces/cart.interface';
+import { Strings } from 'src/app/enum/strings.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,11 @@ export class CartService {
   ) { }
 
   getCart() {
-    return this.storage.getStorage('cart');
+    return this.storage.getStorage(Strings.CART_STORAGE);
+  }
+
+  getCartOrder() {
+    return this.storage.getStorage(Strings.CART_ORDER);
   }
 
   async getCartData(val?) {
@@ -109,6 +114,7 @@ export class CartService {
       } else {
         this.model.items[index].quantity += 1; // this.model.items[index].quantity = this.model.items[index].quantity + 1
       }
+      console.log('check cart: ', this.model.items);
       await this.calculate();
       this._cart.next(this.model);
       return this.model;
@@ -125,7 +131,7 @@ export class CartService {
         this.model.items = [...items];
         if(this.model.from) this.model.from = '';
       } else {
-        this.model.from = 'cart';
+        this.model.from = Strings.CART_STORAGE;
       }
       console.log('item: ', this.model.items[index]);
       if(this.model.items[index].quantity && this.model.items[index].quantity !== 0) {
@@ -144,6 +150,7 @@ export class CartService {
 
   async calculate() {
     let item = this.model.items.filter(x => x.quantity > 0);
+    console.log('model check qty: ', item);
     this.model.items = item;
     this.model.totalPrice = 0;
     this.model.totalItem = 0;
@@ -170,15 +177,23 @@ export class CartService {
 
   async clearCart() {
     this.global.showLoader();
-    await this.storage.removeStorage('cart');
+    await this.storage.removeStorage(Strings.CART_STORAGE);
+    await this.storage.removeStorage(Strings.CART_ORDER);
     this._cart.next(null);
     this.global.hideLoader();
   }
 
+  async clearCartOrder() {
+    await this.storage.removeStorage(Strings.CART_ORDER);
+  }
+
   saveCart(model?) {
     if(model) this.model = model;
-    this.storage.setStorage('cart', JSON.stringify(this.model));
-    // this._cart.next(this.model);
+    this.storage.setStorage(Strings.CART_STORAGE, JSON.stringify(this.model));
+  }
+
+  saveCartOrder(model) {
+    this.storage.setStorage(Strings.CART_ORDER, JSON.stringify(model));
   }
 
   deg2rad(deg) {

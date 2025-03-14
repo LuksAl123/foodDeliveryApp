@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-button slot="start" *ngIf="urlCheck">
+      <ion-back-button [defaultHref]="getPreviousUrl()"></ion-back-button>
+    </ion-button>
+    <ion-title>To Pay ${{this.order?.grandTotal}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+
+  <ion-list class="ion-margin">
+    <ion-item lines="none" class="ion-margin-bottom" detail="true">
+      <ion-avatar slot="start">
+        <img src="assets/imgs/razorpay.jpg">
+      </ion-avatar>
+      <ion-label>Pay via Razorpay</ion-label>
+    </ion-item>
+  </ion-list>
+
+
+
+</ion-content>

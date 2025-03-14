@@ -136,7 +136,8 @@ export class AddRestaurantPage implements OnInit {
     try {
       this.isLoading = true;
       console.log(form.value);
-      const data = await this.authService.register(form.value, 'restaurant');
+      // const data = await this.authService.register(form.value, 'restaurant');
+      const data = await this.authService.createUser(form.value, 'restaurant');
       if(data?.id) {
         const position = this.apiService.getGeoPoint(this.location.lat, this.location.lng);
         const restaurant = new Restaurant(

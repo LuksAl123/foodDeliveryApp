@@ -57,8 +57,9 @@ export class OrderService {
       //   })
       // )
       // .toPromise();
-      this.uid = await this.getUid();
-      const querySnapshot = await this.api.getDocs('orders');
+      const uid = await this.getUid();
+      const query = this.api.whereQuery('uid', '==', uid);
+      const querySnapshot = await this.api.getDocs('orders', query);
       const orders = await querySnapshot.docs.map((doc) => {
         let item = doc.data();
         item.id = doc.id;
@@ -118,4 +119,9 @@ export class OrderService {
       throw(e);
     }
   }
+
+  reset() {
+    this.uid = null;
+  }
+
 }

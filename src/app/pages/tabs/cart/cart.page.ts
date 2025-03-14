@@ -148,12 +148,14 @@ export class CartPage implements OnInit, OnDestroy {
         paid: 'COD'
       };
       console.log('order: ', data);
-      await this.orderService.placeOrder(data);
-      // clear cart
-      await this.cartService.clearCart();
-      this.model = {} as Cart;
-      this.global.successToast('Your Order is Placed Successfully');
-      this.navCtrl.navigateRoot(['tabs/account']);
+      await this.cartService.saveCartOrder(data);
+      this.router.navigate([this.router.url, 'payment-option']);
+      // await this.orderService.placeOrder(data);
+      // // clear cart
+      // await this.cartService.clearCart();
+      // this.model = {} as Cart;
+      // this.global.successToast('Your Order is Placed Successfully');
+      // this.navCtrl.navigateRoot(['tabs/account']);
     } catch(e) {
       console.log(e);
     }
