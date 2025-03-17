@@ -108,7 +108,8 @@ export class OrderService {
         param.paid,
         order_id,
         uid,
-        param.instruction
+        param.instruction,
+        param?.payment_id ? param.payment_id : null
       ));
       console.log('latest order: ', currentOrders);
       currentOrders = currentOrders.concat(this._orders.value);

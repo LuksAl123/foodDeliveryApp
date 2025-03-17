@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { IonContent, NavController } from '@ionic/angular';
+import { IonContent } from '@ionic/angular';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
@@ -32,7 +32,6 @@ export class CartPage implements OnInit, OnDestroy {
   addressSub: Subscription;
 
   constructor(
-    private navCtrl: NavController,
     private router: Router,
     private orderService: OrderService,
     private global: GlobalService,

@@ -18,5 +18,6 @@ export class Order {
         public id?: string,
         public uid?: string,
         public instruction?: string,
+        public payment_id?: string
     ) {}
 }

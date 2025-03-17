@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Cart } from 'src/app/interfaces/cart.interface';
 import { Order } from 'src/app/models/order.model';
 import { User } from 'src/app/models/user.model';
 import { CartService } from 'src/app/services/cart/cart.service';
@@ -41,7 +42,7 @@ export class PaymentOptionPage implements OnInit, OnDestroy {
   async getData() {
     try {
       await this.checkUrl();
-      const profile = await this.profileService.getProfile();
+      await this.profileService.getProfile();
       const order = await this.cartService.getCartOrder();
       console.log(order);
       this.order = JSON.parse(order?.value);
@@ -64,6 +65,26 @@ export class PaymentOptionPage implements OnInit, OnDestroy {
 
   getPreviousUrl() {
     return this.url.join('/');
+  }
+
+  async placeOrder(param?) {
+    try {
+      this.global.showLoader();
+      const order = {
+        ...this.order,
+        ...param
+      };
+      await this.orderService.placeOrder(order);
+      // clear cart
+      await this.cartService.clearCart();
+      this.global.hideLoader();
+      this.global.successToast('Your Order is Placed Successfully');
+      this.router.navigateByUrl('/tabs/account');
+    } catch(e) {
+      console.log(e);
+      this.global.hideLoader();
+      this.global.errorToast();
+    }
   }
 
   async ngOnDestroy() {

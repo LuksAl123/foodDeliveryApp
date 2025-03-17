@@ -1,7 +1,13 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
+    <?xml version='1.0' encoding='utf-8'?>
+    <resources>
     <string name="app_name">food-delivery-app</string>
     <string name="title_activity_main">food-delivery-app</string>
     <string name="package_name">com.technyks.foodDeliveryApp</string>
     <string name="custom_url_scheme">com.technyks.foodDeliveryApp</string>
-</resources>
+    
+    <string name="publishable_key">${environment.stripe.publishableKey}</string>
+    <bool name="enable_google_pay">true</bool>
+    <string name="country_code">BR</string>
+    <string name="merchant_display_name">Widget Store</string>
+    <bool name="google_pay_is_testing">true</bool>
+    </resources>
