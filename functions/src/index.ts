@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
-import * as corsModule from 'cors';
+import corsModule from 'cors';
 import Stripe from 'stripe';
-import { environment } from "src/environments/environment";
+import { environment } from "../../src/environments/environment";
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
