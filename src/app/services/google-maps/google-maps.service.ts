@@ -1,12 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { HttpService } from '../http/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class GoogleMapsService {
 
   googleMaps: any;
@@ -21,7 +22,7 @@ export class GoogleMapsService {
     return this._markerChange.asObservable();
   }
 
-  constructor(private http: HttpClient, private zone: NgZone) {}
+  constructor(private http: HttpService, private zone: NgZone) {}
 
   loadGoogleMaps(): Promise<any> {
     const win = window as any;
@@ -51,7 +52,7 @@ export class GoogleMapsService {
 
   getAddress(lat: number, lng: number): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(
+      this.http.get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${environment.googleMapsApiKey}`
         )
         .pipe(
@@ -59,11 +60,17 @@ export class GoogleMapsService {
             if(!geoData || !geoData.results || geoData.results.length === 0) throw(null);
             return geoData.results[0];
           })
-        ).subscribe(data => {
-          resolve(data);
-        }, e => {
-          reject(e);
-        });
+        )
+        .subscribe(
+          {
+            next: (data) => {
+                resolve(data);
+            },
+            error: (e) => {
+              reject(e);
+            }
+          }
+        );
     });
   }
 

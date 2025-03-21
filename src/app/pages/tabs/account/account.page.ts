@@ -34,15 +34,20 @@ export class AccountPage implements OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    this.ordersSub = this.orderService.orders.subscribe(order => {
-      console.log('order data: ', order);
-      this.orders = order;
-    }, e => {
-      console.log(e);
+    this.ordersSub = this.orderService.orders.subscribe({
+      next: order => {
+        console.log('order data: ', order);
+        this.orders = order;
+      }, 
+      error: e => {
+        console.log(e);
+      }
     });
-    this.profileSub = this.profileService.profile.subscribe(profile => {
-      this.profile = profile;
-      console.log(this.profile);
+    this.profileSub = this.profileService.profile.subscribe({
+      next: profile => {
+        this.profile = profile;
+        console.log(this.profile);
+      }
     });
     this.getData();
   }

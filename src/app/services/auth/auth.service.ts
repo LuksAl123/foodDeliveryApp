@@ -3,10 +3,10 @@ import { StorageService } from '../storage/storage.service';
 import { User } from 'src/app/models/user.model';
 import { ApiService } from '../api/api.service';
 import { Strings } from 'src/app/enum/strings.enum';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, map } from 'rxjs';
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, updateEmail } from '@angular/fire/auth';
-import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { HttpService } from '../http/http.service';
 
   export class AuthUserId {
     constructor(public uid: string) {}
@@ -35,7 +35,7 @@ export class AuthService {
     // private fireAuth: AngularFireAuth,
     private fireAuth: Auth,
     private apiService: ApiService,
-    private http: HttpClient
+    private http: HttpService
   ) { }
 
   async login(email: string, password: string): Promise<any> {
@@ -101,14 +101,16 @@ export class AuthService {
 
   async createUser(formValue, type) {
     try {
-      const response = await this.http.post<any>(
+      const response$ = this.http.post(
         `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebase.apiKey}`,
         {
           email: formValue.email,
           password: formValue.password
           // returnSecureToken: true
         }
-      ).toPromise();
+      );
+      // const response = await (response$).toPromise();
+      const response = await lastValueFrom(response$);
       console.log('register user: ', response);
       const uid = response.localId;
       const data = new User(

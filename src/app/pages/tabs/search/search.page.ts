@@ -43,9 +43,11 @@ export class SearchPage implements OnInit, OnDestroy {
     setTimeout(() => {
       this.sInput.setFocus();
     }, 500);
-    this.querySub = combineLatest(this.startObs, this.endObs).subscribe(val => {
-      console.log(val);
-      this.queryResults(val[0], val[1]);
+    this.querySub = combineLatest([this.startObs, this.endObs]).subscribe({
+      next: async(val) => {
+        console.log(val);
+        await this.queryResults(val[0], val[1]);
+      }
     });
     // this.addressSub = this.addressService.addressChange.subscribe(address => {
     //   console.log('address', address);

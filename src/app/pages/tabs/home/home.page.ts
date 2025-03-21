@@ -37,22 +37,25 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.addressSub = this.addressService.addressChange.subscribe(address => {
-      console.log('address', address);
-      if(address && address?.lat) {
-        if(!this.isLoading) this.isLoading = true;
-        this.location = address;
-        // this.nearbyApiCall(address.lat, address.lng);
-        this.nearbyApiCall();
-      } else {
-        if(address && (!this.location || !this.location?.lat)) {
-          this.searchLocation('home', 'home-modal');
+    this.addressSub = this.addressService.addressChange.subscribe({
+      next: address => {
+        console.log('address', address);
+        if(address && address?.lat) {
+          if(!this.isLoading) this.isLoading = true;
+          this.location = address;
+          // this.nearbyApiCall(address.lat, address.lng);
+          this.nearbyApiCall();
+        } else {
+          if(address && (!this.location || !this.location?.lat)) {
+            this.searchLocation('home', 'home-modal');
+          }
         }
+      },
+      error: e => {
+        console.log(e);
+        this.isLoading = false;
+        this.global.errorToast();
       }
-    }, e => {
-      console.log(e);
-      this.isLoading = false;
-      this.global.errorToast();
     });
     this.isLoading = true;
     this.getBanners();

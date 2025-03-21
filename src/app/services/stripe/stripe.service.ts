@@ -1,8 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PaymentSheetEventsEnum, Stripe } from '@capacitor-community/stripe';
+import { ApplePayEventsEnum, CreatePaymentFlowOption, CreatePaymentSheetOption, GooglePayEventsEnum, PaymentFlowEventsEnum, PaymentSheetEventsEnum, Stripe } from '@capacitor-community/stripe';
 import { lastValueFrom } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+interface StripeResponseType {
+  paymentIntent: string;
+  ephemeralKey: string;
+  customer: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,105 +23,108 @@ export class StripeService {
     });
   }
 
-  async paymentSheet(data) {
-    /*
-    With PaymentSheet, you can make payments in a single flow. 
-    As soon as the User presses the payment button, 
-    the payment is completed. (If you want user have some flow after that, 
-    please use paymentFlow method)
-    */
+  // async paymentSheet(data) {
+  //   /*
+  //   With PaymentSheet, you can make payments in a single flow. 
+  //   As soon as the User presses the payment button, 
+  //   the payment is completed. (If you want user have some flow after that, 
+  //   please use paymentFlow method)
+  //   */
 
-    try {
-      // be able to get event of PaymentSheet
-      Stripe.addListener(PaymentSheetEventsEnum.Completed, () => {
-        console.log('PaymentSheetEventsEnum.Completed');
-      });
+  //   try {
+  //     // be able to get event of PaymentSheet
+  //     Stripe.addListener(PaymentSheetEventsEnum.Completed, () => {
+  //       console.log('PaymentSheetEventsEnum.Completed');
+  //     });
 
-      // Connect to your backend endpoint, and get every key.
-      const data$ = this.fetchData(data);
+  //     // Connect to your backend endpoint, and get every key.
+  //     const data$ = this.fetchData(data);
 
-      const { paymentIntent, ephemeralKey, customer } = await lastValueFrom(data$);
-      // const { paymentIntent, ephemeralKey, customer } = await (data$).toPromise();
+  //     const { paymentIntentClientSecret, customerEphemeralKeySecret, customerId } = await lastValueFrom(data$) as CreatePaymentSheetOption;
+  //     // const { paymentIntent, ephemeralKey, customer } = await (data$).toPromise();
 
-      console.log('paymentIntent: ', paymentIntent);
+  //     // console.log('paymentIntent: ', paymentIntent);
 
-      // prepare PaymentSheet with CreatePaymentSheetOption.
-      await Stripe.createPaymentSheet({
-        paymentIntentClientSecret: paymentIntent,
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        merchantDisplayName: 'Food Delivery'
-      });
+  //     // prepare PaymentSheet with CreatePaymentSheetOption.
+  //     await Stripe.createPaymentSheet({
+  //       paymentIntentClientSecret,
+  //       customerEphemeralKeySecret,
+  //       customerId,
+  //       merchantDisplayName: 'Food Delivery'
+  //     });
 
-      // present PaymentSheet and get result.
-      const result = await Stripe.presentPaymentSheet();
-      console.log('result: ', result);
-      if (result && result.paymentResult === PaymentSheetEventsEnum.Completed) {
-        
-      }
-    } catch(e) {
-      console.log(e);
-      throw(e);
-    }
-  }
+  //     // present PaymentSheet and get result.
+  //     const result = await Stripe.presentPaymentSheet();
+  //     console.log('result: ', result);
+  //     if (result && result.paymentResult === PaymentSheetEventsEnum.Completed) {
+
+  //     }
+  //   } catch(e) {
+  //     console.log(e);
+  //     throw(e);
+  //   }
+  // }
 
   // fetchData(data) {
   //   return this.http.post(environment.firebaseApiUrl + 'stripePaymentSheet', data).pipe(first());
   // }
 
-  // async paymentFlow(data) {
-  //   /* 
-  //   With PaymentFlow, you can make payments in two steps flow. 
-  //   When the user presses the submit button, 
-  //   the system only gets the card information, 
-  //   and puts it in a pending state. 
-  //   After that, when the program executes the confirmation method, 
-  //   the payment is executed. In most cases, 
-  //   it is used in a flow that is interrupted by a final confirmation screen.
-  //   */
-  //   try {
-  //     await Stripe.initialize({
-  //       publishableKey: environment.stripe.publishableKey,
-  //     });
-  //     // be able to get event of PaymentFlow
-  //     Stripe.addListener(PaymentFlowEventsEnum.Completed, () => {
-  //       console.log('PaymentFlowEventsEnum.Completed');
-  //     });
-    
-  //     // Connect to your backend endpoint, and get every key.
-  //     const data$ = this.fetchData(data);
-  
-  //     const {paymentIntent, ephemeralKey, customer} = await lastValueFrom(data$);
-  //     // const { paymentIntent, ephemeralKey, customer } = await (data$).toPromise();
+  fetchData(data) {
+    return this.http.post<StripeResponseType>(environment.firebaseApiUrl, data).pipe(first());
+  };
 
-  //     console.log('paymentIntent: ', paymentIntent);
-  
-  //     // Prepare PaymentFlow with CreatePaymentFlowOption.
-  //     await Stripe.createPaymentFlow({
-  //       paymentIntentClientSecret: paymentIntent,
-  //       // setupIntentClientSecret: setupIntent,
-  //       customerEphemeralKeySecret: ephemeralKey,
-  //       customerId: customer,
-  //       merchantDisplayName: 'Food Delivery',
-  //       enableGooglePay: true
-  //     });
-  
-  //     // Present PaymentFlow. **Not completed yet.**
-  //     const presentResult = await Stripe.presentPaymentFlow();
-  //     console.log('presentResult: ', presentResult); // { cardNumber: "●●●● ●●●● ●●●● ****" }
-  
-  //     // Confirm PaymentFlow. Completed.
-  //     const confirmResult = await Stripe.confirmPaymentFlow();
-  //     console.log('confirmResult: ', confirmResult);
-  //     if (confirmResult.paymentResult === PaymentFlowEventsEnum.Completed) {
-  //       // Happy path
-  //       return paymentIntent;
-  //     }
-  //     return null;
-  //   } catch(e) {
-  //     throw(e);
-  //   }
-  // }
+  async paymentFlow(data) {
+    /*
+    With PaymentFlow, you can make payments in two steps flow. 
+    When the user presses the submit button, 
+    the system only gets the card information, 
+    and puts it in a pending state. 
+    After that, when the program executes the confirmation method, 
+    the payment is executed. In most cases, 
+    it is used in a flow that is interrupted by a final confirmation screen.
+    */
+    try {
+      await Stripe.initialize({
+        publishableKey: environment.stripe.publishableKey,
+      });
+      // be able to get event of PaymentFlow
+      Stripe.addListener(PaymentFlowEventsEnum.Completed, () => {
+        console.log('PaymentFlowEventsEnum.Completed');
+      });
+
+      // Connect to your backend endpoint, and get every key.
+      // const data$ = this.fetchData(data);
+      const data$ = this.fetchData(data);
+
+      const { paymentIntent, ephemeralKey, customer } = await lastValueFrom(data$) as StripeResponseType;
+      // const { paymentIntent, ephemeralKey, customer } = await (data$).toPromise();
+
+      // Prepare PaymentFlow with CreatePaymentFlowOption.
+
+      await Stripe.createPaymentFlow({
+        paymentIntentClientSecret: paymentIntent,
+        customerEphemeralKeySecret: ephemeralKey,
+        customerId: customer,
+        merchantDisplayName: 'Food Delivery',
+        enableGooglePay: true
+      });
+
+      // Present PaymentFlow. **Not completed yet.**
+      const presentResult = await Stripe.presentPaymentFlow();
+      console.log('presentResult: ', presentResult); // { cardNumber: "●●●● ●●●● ●●●● ****" }
+
+      // Confirm PaymentFlow. Completed.
+      const confirmResult = await Stripe.confirmPaymentFlow();
+      console.log('confirmResult: ', confirmResult);
+      if (confirmResult.paymentResult === PaymentFlowEventsEnum.Completed) {
+        // Happy path
+        return paymentIntent;
+      }
+      return null;
+    } catch(e) {
+      throw(e);
+    }
+  }
 
   // async applePay(data) {
   //     // Check to be able to use Apple Pay on device
@@ -128,7 +138,7 @@ export class StripeService {
   //   Stripe.addListener(ApplePayEventsEnum.Completed, () => {
   //     console.log('ApplePayEventsEnum.Completed');
   //   });
-    
+
   //   // Connect to your backend endpoint, and get paymentIntent.
   //   // const data$ = this.http.post<{
   //   //   paymentIntent: string;
@@ -136,7 +146,7 @@ export class StripeService {
 
   //   const data$ = this.fetchData(data);
 
-  //   const { paymentIntent } = await lastValueFrom(data$);
+  //   const { paymentIntent } = await lastValueFrom(data$) as any;
   //   // const { paymentIntent } = await (data$).toPromise();
 
   //   // Prepare Apple Pay
@@ -146,8 +156,8 @@ export class StripeService {
   //       label: 'Food Delivery',
   //       amount: data?.amount * 100
   //     }],
-  //     merchantIdentifier: 'mazaeats',
-  //     countryCode: 'IN',
+  //     merchantIdentifier: 'fooddelivery',
+  //     countryCode: 'BR',
   //     currency: data?.currency,
   //   });
 
@@ -165,15 +175,15 @@ export class StripeService {
   //     // disable to use Google Pay
   //     return;
   //   }
-  
+
   //   Stripe.addListener(GooglePayEventsEnum.Completed, () => {
   //     console.log('GooglePayEventsEnum.Completed');
   //   });
-    
+
   //   // const data = new HttpParams({
   //   //   fromObject: this.data
   //   // });
-    
+
   //   // Connect to your backend endpoint, and get paymentIntent.
   //   // const data$= this.http.post<{
   //   //   paymentIntent: string;
@@ -181,7 +191,7 @@ export class StripeService {
 
   //   const data$ = this.fetchData(data);
 
-  //   const { paymentIntent } = await lastValueFrom(data$);
+  //   const { paymentIntent } = await lastValueFrom(data$) as any;
   //   // const { paymentIntent } = await (data$).toPromise();
 
   //   // Prepare Google Pay
@@ -194,7 +204,7 @@ export class StripeService {
   //       amount: data?.amount * 100
   //     }],
   //     merchantIdentifier: 'merchant.com.getcapacitor.stripe',
-  //     countryCode: 'IN',
+  //     countryCode: 'BR',
   //     currency: data.currency,
   //   });
 

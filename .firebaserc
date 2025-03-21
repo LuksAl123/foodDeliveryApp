@@ -1,6 +1,7 @@
 {
   "projects": {
-    "fooddev": "fooddeliveryapp-47907"
+    "fooddev": "fooddeliveryapp-47907",
+    "default": "fooddeliveryapp-47907"
   },
   "targets": {},
   "etags": {}

@@ -29,8 +29,10 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.placeSub = this.maps.places.subscribe(places => {
-      this.places = places;
+    this.placeSub = this.maps.places.subscribe({
+      next: places => {
+        this.places = places;
+      }
     });
     if(this.from) {
       this.getSavedPlaces();
@@ -39,8 +41,10 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
 
   async getSavedPlaces() {
     this.global.showLoader();
-    this.addressSub = this.addressService.addresses.subscribe(addresses => {
-      this.savedPlaces = addresses;
+    this.addressSub = this.addressService.addresses.subscribe({
+      next: addresses => {
+        this.savedPlaces = addresses;
+      }
     });
     if(this.from == 'home') await this.addressService.getAddresses(2);
     else await this.addressService.getAddresses();

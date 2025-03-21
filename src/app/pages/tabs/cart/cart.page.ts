@@ -41,26 +41,30 @@ export class CartPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.getData();
-    this.addressSub = this.addressService.addressChange.subscribe(async (address) => {
-      console.log('location cart: ', address);
-      this.location = address;
-      if(this.location?.id && this.location?.id != '') {
-        const radius = this.orderService.getRadius();
-        const result = await this.cartService.checkCart(this.location.lat, this.location.lng, radius);
-        console.log(result);
-        if(result) {
-          this.global.errorToast(
-            'Your location is too far from the restaurant in the cart, kindly search from some other restaurant nearby.',
-            5000);
-          this.cartService.clearCart();
+    this.addressSub = this.addressService.addressChange.subscribe({
+      next: async (address) => {
+        console.log('location cart: ', address);
+        this.location = address;
+        if(this.location?.id && this.location?.id != '') {
+          const radius = this.orderService.getRadius();
+          const result = await this.cartService.checkCart(this.location.lat, this.location.lng, radius);
+          console.log(result);
+          if(result) {
+            this.global.errorToast(
+              'Your location is too far from the restaurant in the cart, kindly search from some other restaurant nearby.',
+              5000);
+            this.cartService.clearCart();
+          }
         }
       }
     });
-    this.cartSub = this.cartService.cart.subscribe(cart => {
-      console.log('cart page: ', cart);
-      this.model = cart;
-      if(!this.model) this.location = {} as Address;
-      console.log('cart page model: ', this.model);
+    this.cartSub = this.cartService.cart.subscribe({
+      next: cart => {
+        console.log('cart page: ', cart);
+        this.model = cart;
+        if(!this.model) this.location = {} as Address;
+        console.log('cart page model: ', this.model);
+      }
     });
   }
 

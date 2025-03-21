@@ -8,15 +8,12 @@ import { Banner } from 'src/app/models/banner.model';
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss'],
 })
-
 export class BannerComponent  implements OnInit {
 
   swiperModules = [IonicSlides];
   @Input() bannerImages: Banner[];
 
-  constructor(
-    private router: Router
-  ) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {}
 

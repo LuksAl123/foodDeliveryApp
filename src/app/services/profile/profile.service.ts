@@ -26,23 +26,28 @@ export class ProfileService {
       const uid = await this.authService.getId();
       // let profile: any = await (await (this.apiService.collection('users').doc(uid).get().toPromise())).data();
       let profile: User;
-      const docSnap: any = await this.apiService.getDocById(`users/${uid}`);
-      if(docSnap?.exists()) {
-        profile = docSnap.data();
+      profile = this._profile.value;
+      if(profile && (uid == profile?.uid)) {
+        return profile;
       } else {
-        throw('No such document exists');
+        const docSnap: any = await this.apiService.getDocById(`users/${uid}`);
+        if(docSnap?.exists()) {
+          profile = docSnap.data();
+        } else {
+          throw('No such document exists');
+        }
+        console.log('profile: ', profile);
+        const data = new User(
+          profile.email,
+          profile.phone,
+          profile.name,
+          uid,
+          profile.type,
+          profile.status
+        );
+        this._profile.next(data);
+        return data;
       }
-      console.log('profile: ', profile);
-      const data = new User(
-        profile.email,
-        profile.phone,
-        profile.name,
-        uid,
-        profile.type,
-        profile.status
-      );
-      this._profile.next(data);
-      return data;
     } catch(e) {
       throw(e);
     }

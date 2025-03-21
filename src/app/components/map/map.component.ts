@@ -30,15 +30,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async ngAfterViewInit() {
     await this.initMap();
-    this.mapChange = this.maps.markerChange.subscribe(async(loc) => {
-      if(loc?.lat) {
-        console.log('loc: ', loc);
-        console.log('maps: ', this.googleMaps);
-        const googleMaps = this.googleMaps;
-        const location = new googleMaps.LatLng(loc.lat, loc.lng);
-        this.map.panTo(location);
-        this.marker.setMap(null);
-        await this.addMarker(location);
+    this.mapChange = this.maps.markerChange.subscribe({
+      next: async(loc) => {
+        if(loc?.lat) {
+          console.log('loc: ', loc);
+          console.log('maps: ', this.googleMaps);
+          const googleMaps = this.googleMaps;
+          const location = new googleMaps.LatLng(loc.lat, loc.lng);
+          this.map.panTo(location);
+          this.marker.setMap(null);
+          await this.addMarker(location);
+        }
       }
     });    
   }

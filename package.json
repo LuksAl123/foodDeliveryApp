@@ -5,6 +5,7 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
+    "serve": "npm run build && firebase emulators:start --only functions",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -35,12 +36,13 @@
     "@ionic/angular": "^7.0.0",
     "@stripe-elements/stripe-elements": "^2.0.2",
     "@types/long": "^4.0.2",
+    "cors": "^2.8.5",
     "geofirestore": "^5.2.0",
     "ionicons": "^7.0.0",
     "long": "^5.3.0",
     "moment": "^2.29.4",
     "rxjs": "~7.8.0",
-    "stripe-pwa-elements": "^2.1.0",
+    "stripe-pwa-elements": "^2.0.2",
     "swiper": "^9.3.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

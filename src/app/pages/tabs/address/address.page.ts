@@ -28,9 +28,11 @@ export class AddressPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.addressesSub = this.addressService.addresses.subscribe(address => {
-      console.log('addresses: ', address);
-      this.addresses = address;      
+    this.addressesSub = this.addressService.addresses.subscribe({
+      next: address => {
+        console.log('addresses: ', address);
+        this.addresses = address;      
+      }
     });
     this.getAddresses();
   }

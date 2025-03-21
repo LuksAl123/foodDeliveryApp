@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cart } from 'src/app/interfaces/cart.interface';
 import { Order } from 'src/app/models/order.model';
 import { User } from 'src/app/models/user.model';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { OrderService } from 'src/app/services/order/order.service';
 import { ProfileService } from 'src/app/services/profile/profile.service';
+import { StripeService } from 'src/app/services/stripe/stripe.service';
 
 @Component({
   selector: 'app-payment-option',
@@ -28,14 +28,17 @@ export class PaymentOptionPage implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private cartService: CartService,
     private orderService: OrderService,
-    private global: GlobalService
+    private global: GlobalService,
+    private stripe: StripeService
   ) { }
 
   async ngOnInit() {
     await this.getData();
-    this.profileSub = this.profileService.profile.subscribe(profile => {
-      console.log(profile);
-      this.profile = profile;
+    this.profileSub = this.profileService.profile.subscribe({
+      next: profile => {
+        console.log(profile);
+        this.profile = profile;
+      }
     });
   }
 
@@ -67,6 +70,34 @@ export class PaymentOptionPage implements OnInit, OnDestroy {
     return this.url.join('/');
   }
 
+  async payWithStripe() {
+    try {
+      this.global.showLoader();
+      // const profile = await this.profileService.getProfile();
+      console.log('profile: ', this.profile);
+      const stripe_data = {
+        name: this.profile?.name,
+        email: this.profile?.email,
+        // amount: 1 * 100,
+        amount: this.order?.grandTotal * 100,
+        currency: 'inr'
+      };
+      const payment_description = await this.stripe.paymentFlow(stripe_data);
+      console.log(payment_description);
+      const payment_desc = payment_description.split('_').slice(0, 2).join('_');
+      const order_param = {
+        paid: 'Stripe',
+        payment_id: payment_desc
+      };
+      this.global.hideLoader();
+      await this.placeOrder(order_param);
+    } catch(e) {
+      console.log(e);
+      this.global.hideLoader();
+      this.global.errorToast(e?.message);
+    }
+  }
+
   async placeOrder(param?) {
     try {
       this.global.showLoader();
@@ -89,7 +120,7 @@ export class PaymentOptionPage implements OnInit, OnDestroy {
 
   async ngOnDestroy() {
     await this.cartService.clearCartOrder();
-    if(this.profileSub)this.profileSub.unsubscribe();
+    if(this.profileSub) this.profileSub.unsubscribe();
   }
 
 }
